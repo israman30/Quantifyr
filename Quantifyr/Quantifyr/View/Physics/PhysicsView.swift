@@ -36,4 +36,6 @@ struct PhysicsView: View {
 
 #Preview {
     PhysicsView()
+        .environment(HistoryManager.shared)
+        .environment(FavoritesManager.shared)
 }

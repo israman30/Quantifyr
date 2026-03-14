@@ -199,4 +199,6 @@ struct UnitConverterView: View {
 
 #Preview {
     UnitConverterView()
+        .environment(HistoryManager.shared)
+        .environment(FavoritesManager.shared)
 }

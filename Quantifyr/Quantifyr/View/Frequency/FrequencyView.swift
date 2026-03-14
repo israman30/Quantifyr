@@ -35,4 +35,6 @@ struct FrequencyView: View {
 
 #Preview {
     FrequencyView()
+        .environment(HistoryManager.shared)
+        .environment(FavoritesManager.shared)
 }

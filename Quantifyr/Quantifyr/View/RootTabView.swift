@@ -25,4 +25,6 @@ struct RootTabView: View {
 
 #Preview {
     RootTabView()
+        .environment(HistoryManager.shared)
+        .environment(FavoritesManager.shared)
 }

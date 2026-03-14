@@ -117,5 +117,7 @@ struct MetricPrefixView: View {
 #Preview {
     NavigationStack {
         MetricPrefixView()
+            .environment(HistoryManager.shared)
+            .environment(FavoritesManager.shared)
     }
 }

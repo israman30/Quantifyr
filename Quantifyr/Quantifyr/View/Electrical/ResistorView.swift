@@ -107,5 +107,7 @@ struct ResistorView: View {
 #Preview {
     NavigationStack {
         ResistorView()
+            .environment(HistoryManager.shared)
+            .environment(FavoritesManager.shared)
     }
 }

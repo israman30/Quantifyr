@@ -49,4 +49,6 @@ struct ElectricalView: View {
 
 #Preview {
     ElectricalView()
+        .environment(HistoryManager.shared)
+        .environment(FavoritesManager.shared)
 }

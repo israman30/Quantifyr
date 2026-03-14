@@ -80,5 +80,7 @@ struct CapacitanceView: View {
 #Preview {
     NavigationStack {
         CapacitanceView()
+            .environment(HistoryManager.shared)
+            .environment(FavoritesManager.shared)
     }
 }
