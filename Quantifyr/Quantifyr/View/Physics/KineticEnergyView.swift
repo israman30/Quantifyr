@@ -17,7 +17,7 @@ struct KineticEnergyView: View {
     }
     
     private var steps: [String] {
-        guard let e = kineticEnergy, let m = Double(mass), let v = Double(velocity) else { return [] }
+        guard let _ = kineticEnergy, let m = Double(mass), let v = Double(velocity) else { return [] }
         return [
             "Given: m = \(m) kg, v = \(v) m/s",
             "E = ½mv²",

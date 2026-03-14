@@ -17,7 +17,7 @@ struct ForceView: View {
     }
     
     private var steps: [String] {
-        guard let f = force, let m = Double(mass), let a = Double(acceleration) else { return [] }
+        guard let _ = force, let m = Double(mass), let a = Double(acceleration) else { return [] }
         return [
             "Given: m = \(m) kg, a = \(a) m/s²",
             "F = m × a",

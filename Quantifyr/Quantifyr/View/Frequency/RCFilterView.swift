@@ -20,7 +20,7 @@ struct RCFilterView: View {
     }
     
     private var steps: [String] {
-        guard let f = cutoffFrequency, let r = Double(resistance), let c = Double(capacitance) else { return [] }
+        guard let _ = cutoffFrequency, let r = Double(resistance), let c = Double(capacitance) else { return [] }
         return [
             "Given: R = \(r) Ω, C = \(c) F",
             "f = 1 / (2πRC)",

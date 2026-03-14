@@ -36,7 +36,7 @@ struct ResistorView: View {
     }
     
     private var steps: [String] {
-        guard let total = totalResistance else { return [] }
+        guard totalResistance != nil else { return [] }
         let values = [r1, r2, r3].compactMap { Double($0) }.filter { $0 > 0 }
         switch config {
         case .series:

@@ -34,7 +34,7 @@ struct PowerView: View {
     }
     
     private var steps: [String] {
-        guard let p = power else { return [] }
+        guard power != nil else { return [] }
         switch formula {
         case .pVI:
             guard let v = Double(voltage), let i = Double(current) else { return [] }

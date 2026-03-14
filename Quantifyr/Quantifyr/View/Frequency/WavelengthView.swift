@@ -17,7 +17,7 @@ struct WavelengthView: View {
     }
     
     private var steps: [String] {
-        guard let w = wavelength, let v = Double(velocity), let f = Double(frequency) else { return [] }
+        guard let _ = wavelength, let v = Double(velocity), let f = Double(frequency) else { return [] }
         return [
             "Given: v = \(v) m/s, f = \(f) Hz",
             "λ = v / f",

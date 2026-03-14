@@ -34,7 +34,7 @@ struct OhmsLawView: View {
     }
     
     private var steps: [String] {
-        guard let r = result else { return [] }
+        guard result != nil else { return [] }
         switch solveFor {
         case .voltage:
             guard let i = Double(current), let res = Double(resistance) else { return [] }

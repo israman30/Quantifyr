@@ -17,7 +17,7 @@ struct MomentumView: View {
     }
     
     private var steps: [String] {
-        guard let p = momentum, let m = Double(mass), let v = Double(velocity) else { return [] }
+        guard let _ = momentum, let m = Double(mass), let v = Double(velocity) else { return [] }
         return [
             "Given: m = \(m) kg, v = \(v) m/s",
             "p = mv",
