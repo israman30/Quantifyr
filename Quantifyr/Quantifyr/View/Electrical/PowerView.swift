@@ -14,10 +14,13 @@ enum PowerFormula: String, CaseIterable {
 }
 
 struct PowerView: View {
+    @Environment(HistoryManager.self) private var historyManager
+    @Environment(FavoritesManager.self) private var favoritesManager
     @State private var formula: PowerFormula = .pVI
     @State private var voltage = ""
     @State private var current = ""
     @State private var resistance = ""
+    @State private var hasCalculated = false
     
     private var power: Double? {
         switch formula {
@@ -93,7 +96,22 @@ struct PowerView: View {
                         }
                     }
                     
-                    if let power {
+                    Section {
+                        Button {
+                            hasCalculated = true
+                            if let p = power {
+                                historyManager.add(formulaName: "Power", result: String(format: "%.4g W", p))
+                            }
+                        } label: {
+                            Text("Calculate")
+                                .frame(maxWidth: .infinity)
+                                .padding(.vertical, 12)
+                        }
+                        .buttonStyle(.borderedProminent)
+                        .disabled(power == nil)
+                    }
+                    
+                    if hasCalculated, let power {
                         Section("Result") {
                             Text(String(format: "%.4g W", power))
                                 .font(.title2)
@@ -113,11 +131,23 @@ struct PowerView: View {
             .padding()
         }
         .navigationTitle("Power")
+        .toolbar {
+            ToolbarItem(placement: .topBarTrailing) {
+                Button {
+                    favoritesManager.toggle("power")
+                } label: {
+                    Image(systemName: favoritesManager.isFavorite("power") ? "star.fill" : "star")
+                        .foregroundStyle(favoritesManager.isFavorite("power") ? .yellow : .secondary)
+                }
+            }
+        }
     }
 }
 
 #Preview {
     NavigationStack {
         PowerView()
+            .environment(HistoryManager.shared)
+            .environment(FavoritesManager.shared)
     }
 }

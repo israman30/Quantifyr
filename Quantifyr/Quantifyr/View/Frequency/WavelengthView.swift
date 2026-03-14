@@ -8,12 +8,20 @@
 import SwiftUI
 
 struct WavelengthView: View {
+    @Environment(HistoryManager.self) private var historyManager
+    @Environment(FavoritesManager.self) private var favoritesManager
     @State private var velocity = ""
     @State private var frequency = ""
+    @State private var hasCalculated = false
     
     private var wavelength: Double? {
         guard let v = Double(velocity), let f = Double(frequency), f != 0 else { return nil }
         return v / f
+    }
+    
+    private var resultString: String? {
+        guard let w = wavelength else { return nil }
+        return "λ = \(String(format: "%.4g", w)) m"
     }
     
     private var steps: [String] {
@@ -24,6 +32,8 @@ struct WavelengthView: View {
             "λ = \(v) / \(f)"
         ]
     }
+    
+    private var canCalculate: Bool { wavelength != nil }
     
     var body: some View {
         ScrollView {
@@ -41,9 +51,24 @@ struct WavelengthView: View {
                             .keyboardType(.decimalPad)
                     }
                     
-                    if let wavelength {
+                    Section {
+                        Button {
+                            hasCalculated = true
+                            if let str = resultString {
+                                historyManager.add(formulaName: "Wavelength", result: str)
+                            }
+                        } label: {
+                            Text("Calculate")
+                                .frame(maxWidth: .infinity)
+                                .padding(.vertical, 12)
+                        }
+                        .buttonStyle(.borderedProminent)
+                        .disabled(!canCalculate)
+                    }
+                    
+                    if hasCalculated, let resultString {
                         Section("Result") {
-                            Text(String(format: "%.4g m", wavelength))
+                            Text(resultString)
                                 .font(.title2)
                                 .fontWeight(.semibold)
                         }
@@ -51,7 +76,7 @@ struct WavelengthView: View {
                         Section {
                             StepByStepView(
                                 steps: steps,
-                                result: String(format: "λ = %.4g m", wavelength)
+                                result: resultString
                             )
                         }
                     }
@@ -61,11 +86,23 @@ struct WavelengthView: View {
             .padding()
         }
         .navigationTitle("Wavelength")
+        .toolbar {
+            ToolbarItem(placement: .topBarTrailing) {
+                Button {
+                    favoritesManager.toggle("wavelength")
+                } label: {
+                    Image(systemName: favoritesManager.isFavorite("wavelength") ? "star.fill" : "star")
+                        .foregroundStyle(favoritesManager.isFavorite("wavelength") ? .yellow : .secondary)
+                }
+            }
+        }
     }
 }
 
 #Preview {
     NavigationStack {
         WavelengthView()
+            .environment(HistoryManager.shared)
+            .environment(FavoritesManager.shared)
     }
 }

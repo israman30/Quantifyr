@@ -8,90 +8,252 @@
 import SwiftUI
 
 struct HomeView: View {
+    @Environment(HistoryManager.self) private var historyManager
+    @Environment(FavoritesManager.self) private var favoritesManager
+    @State private var searchText = ""
+    @State private var isSearchFocused = false
+    
+    private var searchResults: [FormulaEntry] {
+        FormulaRegistry.search(searchText)
+    }
+    
+    private var favoriteEntries: [FormulaEntry] {
+        FormulaRegistry.favorites(favoritesManager.favoriteIds)
+    }
+    
     var body: some View {
         NavigationStack {
             ScrollView {
-                VStack(spacing: 16) {
-                    Text("Scientific Toolkit")
-                        .font(.title2)
-                        .foregroundStyle(.secondary)
+                VStack(spacing: 24) {
+                    // Search
+                    searchSection
                     
-                    Text("Enter known values → get results instantly")
-                        .font(.subheadline)
-                        .foregroundStyle(.tertiary)
-                        .multilineTextAlignment(.center)
-                        .padding(.bottom, 8)
-                    
-                    VStack(spacing: 12) {
-                        NavigationLink {
-                            UnitConverterView()
-                        } label: {
-                            FeatureCard(
-                                title: "Unit Converter",
-                                subtitle: "Length, weight, temperature, speed, energy",
-                                icon: "arrow.left.arrow.right"
-                            )
-                        }
-                        .buttonStyle(.plain)
-                        
-                        NavigationLink {
-                            ElectricalView()
-                        } label: {
-                            FeatureCard(
-                                title: "Electrical",
-                                subtitle: "Ohm's Law, Power, Resistors, Capacitance",
-                                icon: "bolt.fill"
-                            )
-                        }
-                        .buttonStyle(.plain)
-                        
-                        NavigationLink {
-                            FrequencyView()
-                        } label: {
-                            FeatureCard(
-                                title: "Frequency & Signal",
-                                subtitle: "Wavelength, RC filter",
-                                icon: "waveform"
-                            )
-                        }
-                        .buttonStyle(.plain)
-                        
-                        NavigationLink {
-                            PhysicsView()
-                        } label: {
-                            FeatureCard(
-                                title: "Physics",
-                                subtitle: "Force, Kinetic Energy, Momentum",
-                                icon: "atom"
-                            )
-                        }
-                        .buttonStyle(.plain)
-                        
-                        NavigationLink {
-                            MetricPrefixView()
-                        } label: {
-                            FeatureCard(
-                                title: "Metric Prefix",
-                                subtitle: "kilo, mega, giga, milli, micro, nano",
-                                icon: "number"
-                            )
-                        }
-                        .buttonStyle(.plain)
+                    // Recent calculations
+                    if !historyManager.records.isEmpty {
+                        recentCalculationsSection
                     }
-                    .padding(.horizontal)
+                    
+                    // Favorites
+                    if !favoriteEntries.isEmpty {
+                        favoritesSection
+                    }
+                    
+                    // Category cards
+                    categorySection
                 }
                 .padding(.vertical, 20)
+                .padding(.horizontal, 16)
             }
             .background(Color(.systemGroupedBackground))
             .navigationTitle("Quantifyr")
+            .searchable(text: $searchText, prompt: "Search formulas: voltage, force, frequency...")
+            .navigationDestination(for: String.self) { formulaId in
+                FormulaRegistry.destination(for: formulaId)
+            }
+        }
+    }
+    
+    private var searchSection: some View {
+        VStack(alignment: .leading, spacing: 8) {
+            if !searchText.isEmpty {
+                Text("Search results")
+                    .font(.headline)
+                    .foregroundStyle(.secondary)
+                
+                if searchResults.isEmpty {
+                    Text("No formulas match \"\(searchText)\"")
+                        .font(.subheadline)
+                        .foregroundStyle(.tertiary)
+                        .padding(.vertical, 12)
+                } else {
+                    ForEach(searchResults) { entry in
+                        NavigationLink(value: entry.id) {
+                            FormulaSearchRow(entry: entry)
+                        }
+                        .buttonStyle(.plain)
+                    }
+                }
+            }
+        }
+    }
+    
+    private var recentCalculationsSection: some View {
+        VStack(alignment: .leading, spacing: 12) {
+            HStack {
+                Text("Recent calculations")
+                    .font(.headline)
+                    .foregroundStyle(.secondary)
+                Spacer()
+                Button("Clear") {
+                    historyManager.clear()
+                }
+                .font(.caption)
+                .foregroundStyle(.secondary)
+            }
+            
+            VStack(spacing: 0) {
+                ForEach(historyManager.records.prefix(10)) { record in
+                    HStack {
+                        VStack(alignment: .leading, spacing: 2) {
+                            Text(record.formulaName)
+                                .font(.subheadline)
+                                .fontWeight(.medium)
+                            Text(record.result)
+                                .font(.caption)
+                                .foregroundStyle(.secondary)
+                        }
+                        Spacer()
+                    }
+                    .padding(.vertical, 10)
+                    .padding(.horizontal, 12)
+                    
+                    if record.id != historyManager.records.prefix(10).last?.id {
+                        Divider()
+                            .padding(.leading, 12)
+                    }
+                }
+            }
+            .background(.background)
+            .clipShape(RoundedRectangle(cornerRadius: 12))
+        }
+    }
+    
+    private var favoritesSection: some View {
+        VStack(alignment: .leading, spacing: 12) {
+            Text("Favorites")
+                .font(.headline)
+                .foregroundStyle(.secondary)
+            
+            ScrollView(.horizontal, showsIndicators: false) {
+                HStack(spacing: 10) {
+                    ForEach(favoriteEntries) { entry in
+                        NavigationLink(value: entry.id) {
+                            FavoriteChip(entry: entry)
+                        }
+                        .buttonStyle(.plain)
+                    }
+                }
+            }
+        }
+    }
+    
+    private var categorySection: some View {
+        VStack(alignment: .leading, spacing: 12) {
+            Text("Scientific Toolkit")
+                .font(.headline)
+                .foregroundStyle(.secondary)
+            
+            Text("Enter known values → get results instantly")
+                .font(.subheadline)
+                .foregroundStyle(.tertiary)
+                .padding(.bottom, 4)
+            
+            VStack(spacing: 12) {
+                CategoryCardLink(
+                    title: "Unit Converter",
+                    subtitle: "Length, weight, temperature, speed, energy",
+                    icon: "arrow.left.arrow.right",
+                    destination: { UnitConverterView() }
+                )
+                
+                CategoryCardLink(
+                    title: "Electrical",
+                    subtitle: "Ohm's Law, Power, Resistors, Capacitance",
+                    icon: "bolt.fill",
+                    destination: { ElectricalView() }
+                )
+                
+                CategoryCardLink(
+                    title: "Physics",
+                    subtitle: "Force, Kinetic Energy, Momentum",
+                    icon: "atom",
+                    destination: { PhysicsView() }
+                )
+                
+                CategoryCardLink(
+                    title: "Frequency",
+                    subtitle: "Wavelength, RC filter",
+                    icon: "waveform",
+                    destination: { FrequencyView() }
+                )
+                
+                CategoryCardLink(
+                    title: "Math",
+                    subtitle: "Metric prefixes: kilo, mega, giga, milli, micro, nano",
+                    icon: "number",
+                    destination: { MetricPrefixView() }
+                )
+            }
         }
     }
 }
 
-#Preview {
-    HomeView()
+// MARK: - Category Card Link
+struct CategoryCardLink<Destination: View>: View {
+    let title: String
+    var subtitle: String? = nil
+    let icon: String
+    @ViewBuilder let destination: () -> Destination
+    
+    var body: some View {
+        NavigationLink {
+            destination()
+        } label: {
+            FeatureCard(title: title, subtitle: subtitle, icon: icon)
+        }
+        .buttonStyle(.plain)
+    }
 }
 
+// MARK: - Formula Search Row
+struct FormulaSearchRow: View {
+    let entry: FormulaEntry
+    @Environment(FavoritesManager.self) private var favoritesManager
+    
+    var body: some View {
+        HStack(spacing: 16) {
+            VStack(alignment: .leading, spacing: 4) {
+                Text(entry.name)
+                    .font(.headline)
+                    .foregroundStyle(.primary)
+                Text(entry.formula)
+                    .font(.caption)
+                    .fontDesign(.monospaced)
+                    .foregroundStyle(.secondary)
+            }
+            Spacer()
+            Button {
+                favoritesManager.toggle(entry.id)
+            } label: {
+                Image(systemName: favoritesManager.isFavorite(entry.id) ? "star.fill" : "star")
+                    .foregroundStyle(favoritesManager.isFavorite(entry.id) ? .yellow : .secondary)
+            }
+            .buttonStyle(.plain)
+        }
+        .padding()
+        .background(.background)
+        .clipShape(RoundedRectangle(cornerRadius: 12))
+    }
+}
+
+// MARK: - Favorite Chip
+struct FavoriteChip: View {
+    let entry: FormulaEntry
+    
+    var body: some View {
+        HStack(spacing: 6) {
+            Text(entry.name)
+                .font(.subheadline)
+                .fontWeight(.medium)
+        }
+        .padding(.horizontal, 14)
+        .padding(.vertical, 10)
+        .background(.background)
+        .clipShape(Capsule())
+    }
+}
+
+// MARK: - Feature Card
 struct FeatureCard: View {
     let title: String
     var subtitle: String? = nil
@@ -128,4 +290,10 @@ struct FeatureCard: View {
         .background(.background)
         .clipShape(RoundedRectangle(cornerRadius: 16))
     }
+}
+
+#Preview {
+    HomeView()
+        .environment(HistoryManager.shared)
+        .environment(FavoritesManager.shared)
 }

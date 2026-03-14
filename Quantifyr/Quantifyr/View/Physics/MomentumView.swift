@@ -8,12 +8,20 @@
 import SwiftUI
 
 struct MomentumView: View {
+    @Environment(HistoryManager.self) private var historyManager
+    @Environment(FavoritesManager.self) private var favoritesManager
     @State private var mass = ""
     @State private var velocity = ""
+    @State private var hasCalculated = false
     
     private var momentum: Double? {
         guard let m = Double(mass), let v = Double(velocity) else { return nil }
         return m * v
+    }
+    
+    private var resultString: String? {
+        guard let p = momentum else { return nil }
+        return "p = \(String(format: "%.4g", p)) kg·m/s"
     }
     
     private var steps: [String] {
@@ -24,6 +32,8 @@ struct MomentumView: View {
             "p = \(m) × \(v)"
         ]
     }
+    
+    private var canCalculate: Bool { momentum != nil }
     
     var body: some View {
         ScrollView {
@@ -41,9 +51,24 @@ struct MomentumView: View {
                             .keyboardType(.decimalPad)
                     }
                     
-                    if let momentum {
+                    Section {
+                        Button {
+                            hasCalculated = true
+                            if let str = resultString {
+                                historyManager.add(formulaName: "Momentum", result: str)
+                            }
+                        } label: {
+                            Text("Calculate")
+                                .frame(maxWidth: .infinity)
+                                .padding(.vertical, 12)
+                        }
+                        .buttonStyle(.borderedProminent)
+                        .disabled(!canCalculate)
+                    }
+                    
+                    if hasCalculated, let resultString {
                         Section("Result") {
-                            Text(String(format: "%.4g kg·m/s", momentum))
+                            Text(resultString)
                                 .font(.title2)
                                 .fontWeight(.semibold)
                         }
@@ -51,7 +76,7 @@ struct MomentumView: View {
                         Section {
                             StepByStepView(
                                 steps: steps,
-                                result: String(format: "p = %.4g kg·m/s", momentum)
+                                result: resultString
                             )
                         }
                     }
@@ -61,11 +86,23 @@ struct MomentumView: View {
             .padding()
         }
         .navigationTitle("Momentum")
+        .toolbar {
+            ToolbarItem(placement: .topBarTrailing) {
+                Button {
+                    favoritesManager.toggle("momentum")
+                } label: {
+                    Image(systemName: favoritesManager.isFavorite("momentum") ? "star.fill" : "star")
+                        .foregroundStyle(favoritesManager.isFavorite("momentum") ? .yellow : .secondary)
+                }
+            }
+        }
     }
 }
 
 #Preview {
     NavigationStack {
         MomentumView()
+            .environment(HistoryManager.shared)
+            .environment(FavoritesManager.shared)
     }
 }

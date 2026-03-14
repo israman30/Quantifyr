@@ -8,8 +8,11 @@
 import SwiftUI
 
 struct RCFilterView: View {
+    @Environment(HistoryManager.self) private var historyManager
+    @Environment(FavoritesManager.self) private var favoritesManager
     @State private var resistance = ""
     @State private var capacitance = ""
+    @State private var hasCalculated = false
     
     private let pi = Double.pi
     
@@ -17,6 +20,11 @@ struct RCFilterView: View {
         guard let r = Double(resistance), let c = Double(capacitance),
               r > 0, c > 0 else { return nil }
         return 1 / (2 * pi * r * c)
+    }
+    
+    private var resultString: String? {
+        guard let f = cutoffFrequency else { return nil }
+        return "f = \(String(format: "%.4g", f)) Hz"
     }
     
     private var steps: [String] {
@@ -27,6 +35,8 @@ struct RCFilterView: View {
             "f = 1 / (2 × π × \(r) × \(c))"
         ]
     }
+    
+    private var canCalculate: Bool { cutoffFrequency != nil }
     
     var body: some View {
         ScrollView {
@@ -44,9 +54,24 @@ struct RCFilterView: View {
                             .keyboardType(.decimalPad)
                     }
                     
-                    if let cutoffFrequency {
+                    Section {
+                        Button {
+                            hasCalculated = true
+                            if let str = resultString {
+                                historyManager.add(formulaName: "RC Filter", result: str)
+                            }
+                        } label: {
+                            Text("Calculate")
+                                .frame(maxWidth: .infinity)
+                                .padding(.vertical, 12)
+                        }
+                        .buttonStyle(.borderedProminent)
+                        .disabled(!canCalculate)
+                    }
+                    
+                    if hasCalculated, let resultString {
                         Section("Result") {
-                            Text(String(format: "%.4g Hz", cutoffFrequency))
+                            Text(resultString)
                                 .font(.title2)
                                 .fontWeight(.semibold)
                         }
@@ -54,7 +79,7 @@ struct RCFilterView: View {
                         Section {
                             StepByStepView(
                                 steps: steps,
-                                result: String(format: "f = %.4g Hz", cutoffFrequency)
+                                result: resultString
                             )
                         }
                     }
@@ -64,11 +89,23 @@ struct RCFilterView: View {
             .padding()
         }
         .navigationTitle("RC Filter")
+        .toolbar {
+            ToolbarItem(placement: .topBarTrailing) {
+                Button {
+                    favoritesManager.toggle("rc_filter")
+                } label: {
+                    Image(systemName: favoritesManager.isFavorite("rc_filter") ? "star.fill" : "star")
+                        .foregroundStyle(favoritesManager.isFavorite("rc_filter") ? .yellow : .secondary)
+                }
+            }
+        }
     }
 }
 
 #Preview {
     NavigationStack {
         RCFilterView()
+            .environment(HistoryManager.shared)
+            .environment(FavoritesManager.shared)
     }
 }

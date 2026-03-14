@@ -7,36 +7,37 @@
 
 import SwiftUI
 
-/// Displays a formula visually for the user to understand before entering values
+/// Displays a formula visually with large typography for the user to understand before entering values
 struct FormulaHelperView: View {
     let formula: String
     let variables: [String]
+    var largeTypography: Bool = true
     
     var body: some View {
-        VStack(alignment: .leading, spacing: 8) {
+        VStack(alignment: .leading, spacing: 12) {
             Text("Formula")
                 .font(.caption)
                 .foregroundStyle(.secondary)
             
             Text(formula)
-                .font(.title2)
-                .fontWeight(.semibold)
+                .font(largeTypography ? .largeTitle : .title2)
+                .fontWeight(.bold)
                 .fontDesign(.monospaced)
-                .padding(.vertical, 8)
-                .padding(.horizontal, 12)
-                .frame(maxWidth: .infinity, alignment: .leading)
+                .padding(.vertical, 12)
+                .padding(.horizontal, 16)
+                .frame(maxWidth: .infinity, alignment: .center)
                 .background(.ultraThinMaterial)
-                .cornerRadius(8)
+                .cornerRadius(12)
             
             if !variables.isEmpty {
-                HStack(spacing: 4) {
+                HStack(spacing: 6) {
                     ForEach(variables, id: \.self) { variable in
                         Text(variable)
                             .font(.caption)
-                            .padding(.horizontal, 6)
-                            .padding(.vertical, 2)
+                            .padding(.horizontal, 8)
+                            .padding(.vertical, 4)
                             .background(.quaternary)
-                            .cornerRadius(4)
+                            .cornerRadius(6)
                     }
                 }
             }

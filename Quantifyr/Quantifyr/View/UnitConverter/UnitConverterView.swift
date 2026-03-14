@@ -16,6 +16,7 @@ enum ConversionCategory: String, CaseIterable {
 }
 
 struct UnitConverterView: View {
+    @Environment(HistoryManager.self) private var historyManager
     @State private var selectedCategory: ConversionCategory = .length
     @State private var inputValue = ""
     @State private var fromUnitIndex = 0
@@ -25,6 +26,11 @@ struct UnitConverterView: View {
         guard let value = Double(inputValue) else { return "—" }
         let converted = convert(value: value, from: fromUnitIndex, to: toUnitIndex)
         return String(format: "%.6g", converted)
+    }
+    
+    private var canSaveToHistory: Bool {
+        guard let _ = Double(inputValue) else { return false }
+        return true
     }
     
     private var fromUnits: [String] {
@@ -79,6 +85,15 @@ struct UnitConverterView: View {
                     Text("\(result) \(toUnits[toUnitIndex])")
                         .font(.title2)
                         .fontWeight(.semibold)
+                    
+                    Button {
+                        historyManager.add(formulaName: selectedCategory.rawValue, result: "\(result) \(toUnits[toUnitIndex])")
+                    } label: {
+                        Label("Save to History", systemImage: "clock.arrow.circlepath")
+                            .frame(maxWidth: .infinity)
+                            .padding(.vertical, 8)
+                    }
+                    .disabled(!canSaveToHistory)
                 }
             }
             .navigationTitle("Unit Converter")

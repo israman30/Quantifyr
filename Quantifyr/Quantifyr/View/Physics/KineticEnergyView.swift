@@ -8,12 +8,20 @@
 import SwiftUI
 
 struct KineticEnergyView: View {
+    @Environment(HistoryManager.self) private var historyManager
+    @Environment(FavoritesManager.self) private var favoritesManager
     @State private var mass = ""
     @State private var velocity = ""
+    @State private var hasCalculated = false
     
     private var kineticEnergy: Double? {
         guard let m = Double(mass), let v = Double(velocity) else { return nil }
         return 0.5 * m * v * v
+    }
+    
+    private var resultString: String? {
+        guard let e = kineticEnergy else { return nil }
+        return "E = \(String(format: "%.4g", e)) J"
     }
     
     private var steps: [String] {
@@ -24,6 +32,8 @@ struct KineticEnergyView: View {
             "E = ½ × \(m) × \(v)²"
         ]
     }
+    
+    private var canCalculate: Bool { kineticEnergy != nil }
     
     var body: some View {
         ScrollView {
@@ -41,9 +51,24 @@ struct KineticEnergyView: View {
                             .keyboardType(.decimalPad)
                     }
                     
-                    if let kineticEnergy {
+                    Section {
+                        Button {
+                            hasCalculated = true
+                            if let str = resultString {
+                                historyManager.add(formulaName: "Kinetic Energy", result: str)
+                            }
+                        } label: {
+                            Text("Calculate")
+                                .frame(maxWidth: .infinity)
+                                .padding(.vertical, 12)
+                        }
+                        .buttonStyle(.borderedProminent)
+                        .disabled(!canCalculate)
+                    }
+                    
+                    if hasCalculated, let resultString {
                         Section("Result") {
-                            Text(String(format: "%.4g J", kineticEnergy))
+                            Text(resultString)
                                 .font(.title2)
                                 .fontWeight(.semibold)
                         }
@@ -51,7 +76,7 @@ struct KineticEnergyView: View {
                         Section {
                             StepByStepView(
                                 steps: steps,
-                                result: String(format: "E = %.4g J", kineticEnergy)
+                                result: resultString
                             )
                         }
                     }
@@ -61,11 +86,23 @@ struct KineticEnergyView: View {
             .padding()
         }
         .navigationTitle("Kinetic Energy")
+        .toolbar {
+            ToolbarItem(placement: .topBarTrailing) {
+                Button {
+                    favoritesManager.toggle("kinetic_energy")
+                } label: {
+                    Image(systemName: favoritesManager.isFavorite("kinetic_energy") ? "star.fill" : "star")
+                        .foregroundStyle(favoritesManager.isFavorite("kinetic_energy") ? .yellow : .secondary)
+                }
+            }
+        }
     }
 }
 
 #Preview {
     NavigationStack {
         KineticEnergyView()
+            .environment(HistoryManager.shared)
+            .environment(FavoritesManager.shared)
     }
 }
