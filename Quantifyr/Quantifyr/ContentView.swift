@@ -10,15 +10,41 @@ import SwiftUI
 struct ContentView: View {
     var body: some View {
         VStack {
-            Image(systemName: "globe")
-                .imageScale(.large)
-                .foregroundStyle(.tint)
-            Text("Hello, world!")
+            OhmsLawView()
         }
-        .padding()
     }
 }
 
 #Preview {
     ContentView()
+}
+
+struct OhmsLawView: View {
+    
+    @State private var voltage = ""
+    @State private var resistance = ""
+    @State private var current: Double?
+    
+    var body: some View {
+        Form {
+            
+            Section("Input Values") {
+                TextField("Voltage (V)", text: $voltage)
+                TextField("Resistance (Ω)", text: $resistance)
+            }
+            
+            Button("Calculate") {
+                if let v = Double(voltage),
+                   let r = Double(resistance) {
+                    current = v / r
+                }
+            }
+            
+            if let current {
+                Section("Result") {
+                    Text("Current: \(current) A")
+                }
+            }
+        }
+    }
 }
