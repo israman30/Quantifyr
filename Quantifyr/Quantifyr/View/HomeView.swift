@@ -11,28 +11,78 @@ struct HomeView: View {
     var body: some View {
         NavigationStack {
             ScrollView {
-                VStack(spacing: 20) {
-                    FeatureCard(
-                        title: "Unit Converter",
-                        icon: "scalemass"
-                    )
-                    FeatureCard(
-                        title: "Electrical",
-                        icon: "bolt.fill"
-                    )
+                VStack(spacing: 16) {
+                    Text("Scientific Toolkit")
+                        .font(.title2)
+                        .foregroundStyle(.secondary)
                     
-                    FeatureCard(
-                        title: "Physics",
-                        icon: "atom"
-                    )
+                    Text("Enter known values → get results instantly")
+                        .font(.subheadline)
+                        .foregroundStyle(.tertiary)
+                        .multilineTextAlignment(.center)
+                        .padding(.bottom, 8)
                     
-                    FeatureCard(
-                        title: "Frequency",
-                        icon: "waveform"
-                    )
+                    VStack(spacing: 12) {
+                        NavigationLink {
+                            UnitConverterView()
+                        } label: {
+                            FeatureCard(
+                                title: "Unit Converter",
+                                subtitle: "Length, weight, temperature, speed, energy",
+                                icon: "arrow.left.arrow.right"
+                            )
+                        }
+                        .buttonStyle(.plain)
+                        
+                        NavigationLink {
+                            ElectricalView()
+                        } label: {
+                            FeatureCard(
+                                title: "Electrical",
+                                subtitle: "Ohm's Law, Power, Resistors, Capacitance",
+                                icon: "bolt.fill"
+                            )
+                        }
+                        .buttonStyle(.plain)
+                        
+                        NavigationLink {
+                            FrequencyView()
+                        } label: {
+                            FeatureCard(
+                                title: "Frequency & Signal",
+                                subtitle: "Wavelength, RC filter",
+                                icon: "waveform"
+                            )
+                        }
+                        .buttonStyle(.plain)
+                        
+                        NavigationLink {
+                            PhysicsView()
+                        } label: {
+                            FeatureCard(
+                                title: "Physics",
+                                subtitle: "Force, Kinetic Energy, Momentum",
+                                icon: "atom"
+                            )
+                        }
+                        .buttonStyle(.plain)
+                        
+                        NavigationLink {
+                            MetricPrefixView()
+                        } label: {
+                            FeatureCard(
+                                title: "Metric Prefix",
+                                subtitle: "kilo, mega, giga, milli, micro, nano",
+                                icon: "number"
+                            )
+                        }
+                        .buttonStyle(.plain)
+                    }
+                    .padding(.horizontal)
                 }
-                .padding()
+                .padding(.vertical, 20)
             }
+            .background(Color(.systemGroupedBackground))
             .navigationTitle("Quantifyr")
         }
     }
@@ -44,22 +94,38 @@ struct HomeView: View {
 
 struct FeatureCard: View {
     let title: String
+    var subtitle: String? = nil
     let icon: String
     
     var body: some View {
-        
-        HStack {
-            
+        HStack(spacing: 16) {
             Image(systemName: icon)
-                .font(.largeTitle)
+                .font(.title2)
+                .foregroundStyle(.primary)
+                .frame(width: 44, height: 44)
+                .background(.primary.opacity(0.15))
+                .clipShape(RoundedRectangle(cornerRadius: 10))
             
-            Text(title)
-                .font(.headline)
+            VStack(alignment: .leading, spacing: 4) {
+                Text(title)
+                    .font(.headline)
+                    .foregroundStyle(.primary)
+                
+                if let subtitle {
+                    Text(subtitle)
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
+                }
+            }
             
             Spacer()
+            
+            Image(systemName: "chevron.right")
+                .font(.caption)
+                .foregroundStyle(.tertiary)
         }
         .padding()
-        .background(.ultraThinMaterial)
-        .cornerRadius(16)
+        .background(.background)
+        .clipShape(RoundedRectangle(cornerRadius: 16))
     }
 }
