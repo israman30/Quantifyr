@@ -183,6 +183,7 @@ struct OhmsLawView: View {
             }
             .padding()
         }
+        .numericKeyboardToolbar()
         .navigationTitle("Ohm's Law")
         .toolbar {
             ToolbarItem(placement: .topBarTrailing) {

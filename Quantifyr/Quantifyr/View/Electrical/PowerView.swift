@@ -132,6 +132,7 @@ struct PowerView: View {
             }
             .padding()
         }
+        .numericKeyboardToolbar()
         .navigationTitle("Power")
         .toolbar {
             ToolbarItem(placement: .topBarTrailing) {

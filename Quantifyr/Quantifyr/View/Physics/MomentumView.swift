@@ -85,6 +85,7 @@ struct MomentumView: View {
             }
             .padding()
         }
+        .numericKeyboardToolbar()
         .navigationTitle("Momentum")
         .toolbar {
             ToolbarItem(placement: .topBarTrailing) {

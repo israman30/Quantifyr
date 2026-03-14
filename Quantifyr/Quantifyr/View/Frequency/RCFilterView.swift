@@ -88,6 +88,7 @@ struct RCFilterView: View {
             }
             .padding()
         }
+        .numericKeyboardToolbar()
         .navigationTitle("RC Filter")
         .toolbar {
             ToolbarItem(placement: .topBarTrailing) {

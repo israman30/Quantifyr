@@ -85,6 +85,7 @@ struct KineticEnergyView: View {
             }
             .padding()
         }
+        .numericKeyboardToolbar()
         .navigationTitle("Kinetic Energy")
         .toolbar {
             ToolbarItem(placement: .topBarTrailing) {

@@ -36,6 +36,7 @@ enum FormulaRegistry {
         FormulaEntry(id: "force", name: "Force", formula: "F = m × a", category: "Physics", keywords: ["force", "mass", "acceleration", "newton"]),
         FormulaEntry(id: "kinetic_energy", name: "Kinetic Energy", formula: "E = ½mv²", category: "Physics", keywords: ["kinetic", "energy", "mass", "velocity"]),
         FormulaEntry(id: "momentum", name: "Momentum", formula: "p = mv", category: "Physics", keywords: ["momentum", "mass", "velocity"]),
+        FormulaEntry(id: "velocity", name: "Velocity", formula: "v = d / t", category: "Physics", keywords: ["velocity", "distance", "time", "speed"]),
         FormulaEntry(id: "wavelength", name: "Wavelength", formula: "λ = v / f", category: "Frequency", keywords: ["wavelength", "frequency", "velocity", "wave"]),
         FormulaEntry(id: "rc_filter", name: "RC Filter", formula: "f = 1 / (2πRC)", category: "Frequency", keywords: ["rc", "filter", "frequency", "cutoff"]),
         FormulaEntry(id: "metric_prefix", name: "Metric Prefix", formula: "kilo, mega, giga, milli, micro", category: "Math", keywords: ["metric", "prefix", "kilo", "mega", "giga", "milli", "micro", "nano"])
@@ -66,6 +67,7 @@ enum FormulaRegistry {
         case "force": ForceView()
         case "kinetic_energy": KineticEnergyView()
         case "momentum": MomentumView()
+        case "velocity": VelocityView()
         case "wavelength": WavelengthView()
         case "rc_filter": RCFilterView()
         case "metric_prefix": MetricPrefixView()

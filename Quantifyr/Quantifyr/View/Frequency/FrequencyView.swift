@@ -7,25 +7,29 @@
 
 import SwiftUI
 
-enum FrequencyTool: String, CaseIterable {
-    case wavelength = "Wavelength"
-    case rcFilter = "RC Filter"
-}
-
 struct FrequencyView: View {
     var body: some View {
         NavigationStack {
             List {
-                NavigationLink {
-                    WavelengthView()
-                } label: {
-                    Label("Wavelength (λ = v/f)", systemImage: "waveform.path")
-                }
-                
-                NavigationLink {
-                    RCFilterView()
-                } label: {
-                    Label("RC Filter Frequency", systemImage: "waveform.circle")
+                ForEach(FormulaLibrary.frequency) { item in
+                    NavigationLink {
+                        FormulaRegistry.destination(for: item.id)
+                    } label: {
+                        HStack(spacing: 12) {
+                            Image(systemName: item.icon)
+                                .font(.title3)
+                                .foregroundStyle(.primary)
+                                .frame(width: 32, alignment: .center)
+                            VStack(alignment: .leading, spacing: 2) {
+                                Text(item.name)
+                                    .font(.headline)
+                                Text(item.formula)
+                                    .font(.caption)
+                                    .fontDesign(.monospaced)
+                                    .foregroundStyle(.secondary)
+                            }
+                        }
+                    }
                 }
             }
             .navigationTitle("Frequency & Signal")

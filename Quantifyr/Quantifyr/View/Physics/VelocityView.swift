@@ -1,63 +1,63 @@
 //
-//  WavelengthView.swift
+//  VelocityView.swift
 //  Quantifyr
 //
-//  Created by Israel Manzo on 3/13/26.
+//  Created by Israel Manzo on 3/14/26.
 //
 
 import SwiftUI
 
-struct WavelengthView: View {
+struct VelocityView: View {
     @Environment(HistoryManager.self) private var historyManager
     @Environment(FavoritesManager.self) private var favoritesManager
-    @State private var velocity = ""
-    @State private var frequency = ""
+    @State private var distance = ""
+    @State private var time = ""
     @State private var hasCalculated = false
     
-    private var wavelength: Double? {
-        guard let v = Double(velocity), let f = Double(frequency), f != 0 else { return nil }
-        return v / f
+    private var velocity: Double? {
+        guard let d = Double(distance), let t = Double(time), t != 0 else { return nil }
+        return d / t
     }
     
     private var resultString: String? {
-        guard let w = wavelength else { return nil }
-        return "λ = \(String(format: "%.4g", w)) m"
+        guard let v = velocity else { return nil }
+        return "v = \(String(format: "%.4g", v)) m/s"
     }
     
     private var steps: [String] {
-        guard let _ = wavelength, let v = Double(velocity), let f = Double(frequency) else { return [] }
+        guard let _ = velocity, let d = Double(distance), let t = Double(time) else { return [] }
         return [
-            "Given: v = \(v) m/s, f = \(f) Hz",
-            "λ = v / f",
-            "λ = \(v) / \(f)"
+            "Given: d = \(d) m, t = \(t) s",
+            "v = d / t",
+            "v = \(d) / \(t)"
         ]
     }
     
-    private var canCalculate: Bool { wavelength != nil }
+    private var canCalculate: Bool { velocity != nil }
     
     var body: some View {
         ScrollView {
             VStack(spacing: 20) {
                 FormulaHelperView(
-                    formula: "λ = v / f",
-                    variables: ["λ = Wavelength (m)", "v = Wave velocity (m/s)", "f = Frequency (Hz)"]
+                    formula: "v = d / t",
+                    variables: ["v = Velocity (m/s)", "d = Distance (m)", "t = Time (s)"]
                 )
                 
                 Form {
                     Section("Input Values") {
-                        TextField("Velocity (m/s)", text: $velocity)
+                        TextField("Distance (m)", text: $distance)
                             .keyboardType(.decimalPad)
-                            .validatedDecimalInput($velocity)
-                        TextField("Frequency (Hz)", text: $frequency)
+                            .validatedDecimalInput($distance)
+                        TextField("Time (s)", text: $time)
                             .keyboardType(.decimalPad)
-                            .validatedDecimalInput($frequency)
+                            .validatedDecimalInput($time)
                     }
                     
                     Section {
                         Button {
                             hasCalculated = true
                             if let str = resultString {
-                                historyManager.add(formulaName: "Wavelength", result: str)
+                                historyManager.add(formulaName: "Velocity", result: str)
                             }
                         } label: {
                             Text("Calculate")
@@ -86,14 +86,14 @@ struct WavelengthView: View {
             .padding()
         }
         .numericKeyboardToolbar()
-        .navigationTitle("Wavelength")
+        .navigationTitle("Velocity")
         .toolbar {
             ToolbarItem(placement: .topBarTrailing) {
                 Button {
-                    favoritesManager.toggle("wavelength")
+                    favoritesManager.toggle("velocity")
                 } label: {
-                    Image(systemName: favoritesManager.isFavorite("wavelength") ? "star.fill" : "star")
-                        .foregroundStyle(favoritesManager.isFavorite("wavelength") ? .yellow : .secondary)
+                    Image(systemName: favoritesManager.isFavorite("velocity") ? "star.fill" : "star")
+                        .foregroundStyle(favoritesManager.isFavorite("velocity") ? .yellow : .secondary)
                 }
             }
         }
@@ -102,7 +102,7 @@ struct WavelengthView: View {
 
 #Preview {
     NavigationStack {
-        WavelengthView()
+        VelocityView()
             .environment(HistoryManager.shared)
             .environment(FavoritesManager.shared)
     }
