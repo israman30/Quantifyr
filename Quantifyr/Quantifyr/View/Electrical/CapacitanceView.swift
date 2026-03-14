@@ -55,17 +55,18 @@ struct CapacitanceView: View {
                     Section("Capacitor Values (F)") {
                         TextField("C₁", text: $c1)
                             .keyboardType(.decimalPad)
+                            .validatedDecimalInput($c1)
                         TextField("C₂", text: $c2)
                             .keyboardType(.decimalPad)
+                            .validatedDecimalInput($c2)
                         TextField("C₃", text: $c3)
                             .keyboardType(.decimalPad)
+                            .validatedDecimalInput($c3)
                     }
                     
                     if let totalCapacitance {
                         Section("Result") {
-                            Text(String(format: "%.6g F", totalCapacitance))
-                                .font(.title2)
-                                .fontWeight(.semibold)
+                            ResultWithActionsView(result: String(format: "%.6g F", totalCapacitance))
                         }
                     }
                 }

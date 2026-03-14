@@ -50,8 +50,10 @@ struct RCFilterView: View {
                     Section("Input Values") {
                         TextField("Resistance (Ω)", text: $resistance)
                             .keyboardType(.decimalPad)
+                            .validatedDecimalInput($resistance)
                         TextField("Capacitance (F)", text: $capacitance)
                             .keyboardType(.decimalPad)
+                            .validatedDecimalInput($capacitance)
                     }
                     
                     Section {
@@ -71,9 +73,7 @@ struct RCFilterView: View {
                     
                     if hasCalculated, let resultString {
                         Section("Result") {
-                            Text(resultString)
-                                .font(.title2)
-                                .fontWeight(.semibold)
+                            ResultWithActionsView(result: resultString, fullText: (steps + [resultString]).joined(separator: "\n"))
                         }
                         
                         Section {

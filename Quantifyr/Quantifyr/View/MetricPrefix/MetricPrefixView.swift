@@ -82,6 +82,7 @@ struct MetricPrefixView: View {
                     Section("Convert") {
                         TextField("Value", text: $inputValue)
                             .keyboardType(.decimalPad)
+                            .validatedDecimalInput($inputValue)
                         
                         TextField("Unit (e.g. m, F, Ω)", text: $unitSymbol)
                         
@@ -101,9 +102,7 @@ struct MetricPrefixView: View {
                     }
                     
                     Section("Result") {
-                        Text(result)
-                            .font(.title2)
-                            .fontWeight(.semibold)
+                        ResultWithActionsView(result: result)
                     }
                 }
                 .scrollContentBackground(.hidden)

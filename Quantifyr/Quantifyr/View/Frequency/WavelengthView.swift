@@ -47,8 +47,10 @@ struct WavelengthView: View {
                     Section("Input Values") {
                         TextField("Velocity (m/s)", text: $velocity)
                             .keyboardType(.decimalPad)
+                            .validatedDecimalInput($velocity)
                         TextField("Frequency (Hz)", text: $frequency)
                             .keyboardType(.decimalPad)
+                            .validatedDecimalInput($frequency)
                     }
                     
                     Section {
@@ -68,9 +70,7 @@ struct WavelengthView: View {
                     
                     if hasCalculated, let resultString {
                         Section("Result") {
-                            Text(resultString)
-                                .font(.title2)
-                                .fontWeight(.semibold)
+                            ResultWithActionsView(result: resultString, fullText: (steps + [resultString]).joined(separator: "\n"))
                         }
                         
                         Section {

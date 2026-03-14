@@ -75,17 +75,19 @@ struct ResistorView: View {
                     Section("Resistor Values (Ω)") {
                         TextField("R₁", text: $r1)
                             .keyboardType(.decimalPad)
+                            .validatedDecimalInput($r1)
                         TextField("R₂", text: $r2)
                             .keyboardType(.decimalPad)
+                            .validatedDecimalInput($r2)
                         TextField("R₃", text: $r3)
                             .keyboardType(.decimalPad)
+                            .validatedDecimalInput($r3)
                     }
                     
                     if let totalResistance {
                         Section("Result") {
-                            Text(String(format: "%.4g Ω", totalResistance))
-                                .font(.title2)
-                                .fontWeight(.semibold)
+                            let resultStr = String(format: "%.4g Ω", totalResistance)
+                            ResultWithActionsView(result: resultStr, fullText: (steps + ["R_total = \(resultStr)"]).joined(separator: "\n"))
                         }
                         
                         Section {

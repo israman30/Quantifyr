@@ -85,14 +85,17 @@ struct PowerView: View {
                         if formula != .pI2R {
                             TextField("Voltage (V)", text: $voltage)
                                 .keyboardType(.decimalPad)
+                                .validatedDecimalInput($voltage)
                         }
                         if formula != .pV2R {
                             TextField("Current (A)", text: $current)
                                 .keyboardType(.decimalPad)
+                                .validatedDecimalInput($current)
                         }
                         if formula != .pVI {
                             TextField("Resistance (Ω)", text: $resistance)
                                 .keyboardType(.decimalPad)
+                                .validatedDecimalInput($resistance)
                         }
                     }
                     
@@ -113,9 +116,8 @@ struct PowerView: View {
                     
                     if hasCalculated, let power {
                         Section("Result") {
-                            Text(String(format: "%.4g W", power))
-                                .font(.title2)
-                                .fontWeight(.semibold)
+                            let resultStr = String(format: "%.4g W", power)
+                            ResultWithActionsView(result: resultStr, fullText: (steps + [resultStr]).joined(separator: "\n"))
                         }
                         
                         Section {

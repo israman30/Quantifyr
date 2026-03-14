@@ -103,6 +103,20 @@ struct HomeView: View {
                                 .foregroundStyle(.secondary)
                         }
                         Spacer()
+                        Menu {
+                            Button {
+                                UIPasteboard.general.string = "\(record.formulaName): \(record.result)"
+                            } label: {
+                                Label("Copy", systemImage: "doc.on.doc")
+                            }
+                            ShareLink(item: "\(record.formulaName): \(record.result)", subject: Text("Calculation"), message: Text("\(record.formulaName): \(record.result)")) {
+                                Label("Share", systemImage: "square.and.arrow.up")
+                            }
+                        } label: {
+                            Image(systemName: "ellipsis.circle")
+                                .font(.body)
+                                .foregroundStyle(.secondary)
+                        }
                     }
                     .padding(.vertical, 10)
                     .padding(.horizontal, 12)

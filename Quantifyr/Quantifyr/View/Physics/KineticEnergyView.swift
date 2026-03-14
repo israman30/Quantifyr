@@ -47,8 +47,10 @@ struct KineticEnergyView: View {
                     Section("Input Values") {
                         TextField("Mass (kg)", text: $mass)
                             .keyboardType(.decimalPad)
+                            .validatedDecimalInput($mass)
                         TextField("Velocity (m/s)", text: $velocity)
                             .keyboardType(.decimalPad)
+                            .validatedDecimalInput($velocity)
                     }
                     
                     Section {
@@ -68,9 +70,7 @@ struct KineticEnergyView: View {
                     
                     if hasCalculated, let resultString {
                         Section("Result") {
-                            Text(resultString)
-                                .font(.title2)
-                                .fontWeight(.semibold)
+                            ResultWithActionsView(result: resultString, fullText: (steps + [resultString]).joined(separator: "\n"))
                         }
                         
                         Section {

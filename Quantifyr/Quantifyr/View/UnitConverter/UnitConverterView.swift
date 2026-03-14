@@ -60,6 +60,7 @@ struct UnitConverterView: View {
                 Section("Convert") {
                     TextField("Value", text: $inputValue)
                         .keyboardType(.decimalPad)
+                        .validatedDecimalInput($inputValue)
                     
                     HStack {
                         Picker("From", selection: $fromUnitIndex) {
@@ -82,9 +83,8 @@ struct UnitConverterView: View {
                 }
                 
                 Section("Result") {
-                    Text("\(result) \(toUnits[toUnitIndex])")
-                        .font(.title2)
-                        .fontWeight(.semibold)
+                    let resultText = "\(result) \(toUnits[toUnitIndex])"
+                    ResultWithActionsView(result: resultText)
                     
                     Button {
                         historyManager.add(formulaName: selectedCategory.rawValue, result: "\(result) \(toUnits[toUnitIndex])")

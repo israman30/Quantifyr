@@ -47,8 +47,10 @@ struct ForceView: View {
                     Section("Input Values") {
                         TextField("Mass (kg)", text: $mass)
                             .keyboardType(.decimalPad)
+                            .validatedDecimalInput($mass)
                         TextField("Acceleration (m/s²)", text: $acceleration)
                             .keyboardType(.decimalPad)
+                            .validatedDecimalInput($acceleration)
                     }
                     
                     Section {
@@ -68,9 +70,7 @@ struct ForceView: View {
                     
                     if hasCalculated, let resultString {
                         Section("Result") {
-                            Text(resultString)
-                                .font(.title2)
-                                .fontWeight(.semibold)
+                            ResultWithActionsView(result: resultString, fullText: (steps + [resultString]).joined(separator: "\n"))
                         }
                         
                         Section {

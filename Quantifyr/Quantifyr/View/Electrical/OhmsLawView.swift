@@ -135,16 +135,19 @@ struct OhmsLawView: View {
                             TextField("Voltage (V)", text: $voltage)
                                 .keyboardType(.decimalPad)
                                 .foregroundStyle(OhmsLawColor.voltage)
+                                .validatedDecimalInput($voltage)
                         }
                         if solveFor != .current {
                             TextField("Current (A)", text: $current)
                                 .keyboardType(.decimalPad)
                                 .foregroundStyle(OhmsLawColor.current)
+                                .validatedDecimalInput($current)
                         }
                         if solveFor != .resistance {
                             TextField("Resistance (Ω)", text: $resistance)
                                 .keyboardType(.decimalPad)
                                 .foregroundStyle(OhmsLawColor.resistance)
+                                .validatedDecimalInput($resistance)
                         }
                     }
                     
@@ -165,9 +168,7 @@ struct OhmsLawView: View {
                     
                     if hasCalculated, let resultString {
                         Section("Result") {
-                            Text(resultString)
-                                .font(.title2)
-                                .fontWeight(.semibold)
+                            ResultWithActionsView(result: resultString, fullText: ([resultString] + steps).joined(separator: "\n"))
                         }
                         
                         Section {
