@@ -198,6 +198,42 @@ struct HomeView: View {
                     destination: { MetricPrefixView() }
                 )
             }
+            
+            // Advanced Features (Future Versions)
+            advancedFeaturesSection
+        }
+    }
+    
+    private var advancedFeaturesSection: some View {
+        VStack(alignment: .leading, spacing: 12) {
+            Text("Advanced Features (Future Versions)")
+                .font(.headline)
+                .foregroundStyle(.secondary)
+            
+            Text("Coming soon")
+                .font(.subheadline)
+                .foregroundStyle(.tertiary)
+                .padding(.bottom, 4)
+            
+            VStack(spacing: 12) {
+                FutureFeatureCard(
+                    title: "Graph Calculator",
+                    subtitle: "Plot equations",
+                    icon: "chart.line.uptrend.xyaxis"
+                )
+                
+                FutureFeatureCard(
+                    title: "Engineering Constants",
+                    subtitle: "Speed of light, Planck constant, Electron charge",
+                    icon: "atom"
+                )
+                
+                FutureFeatureCard(
+                    title: "Scientific Notation Support",
+                    subtitle: "3.2e-5",
+                    icon: "function"
+                )
+            }
         }
     }
 }
@@ -264,6 +300,38 @@ struct FavoriteChip: View {
         .padding(.vertical, 10)
         .background(.background)
         .clipShape(Capsule())
+    }
+}
+
+// MARK: - Future Feature Card
+struct FutureFeatureCard: View {
+    let title: String
+    let subtitle: String
+    let icon: String
+    
+    var body: some View {
+        HStack(spacing: 16) {
+            Image(systemName: icon)
+                .font(.title2)
+                .foregroundStyle(.tertiary)
+                .frame(width: 44, height: 44)
+                .background(.primary.opacity(0.08))
+                .clipShape(RoundedRectangle(cornerRadius: 10))
+            
+            VStack(alignment: .leading, spacing: 4) {
+                Text(title)
+                    .font(.headline)
+                    .foregroundStyle(.secondary)
+                Text(subtitle)
+                    .font(.caption)
+                    .foregroundStyle(.tertiary)
+            }
+            
+            Spacer()
+        }
+        .padding()
+        .background(.background.opacity(0.7))
+        .clipShape(RoundedRectangle(cornerRadius: 16))
     }
 }
 
