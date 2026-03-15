@@ -147,7 +147,9 @@ struct HomeView: View {
                         .buttonStyle(.plain)
                     }
                 }
+                .padding(.vertical, 4)
             }
+            .frame(height: 48)
         }
     }
     
