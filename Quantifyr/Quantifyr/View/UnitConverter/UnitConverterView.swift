@@ -86,6 +86,33 @@ struct UnitConverterView: View {
                     let resultText = "\(result) \(toUnits[toUnitIndex])"
                     ResultWithActionsView(result: resultText)
                     
+                    // Unit Intelligence: suggest cleaner form (e.g., 1000 m → 1 km)
+                    if let value = Double(inputValue), value != 0 {
+                        let converted = convert(value: value, from: fromUnitIndex, to: toUnitIndex)
+                        if let suggestion = UnitIntelligence.suggest(
+                            result: converted,
+                            resultUnit: toUnits[toUnitIndex],
+                            category: selectedCategory
+                        ) {
+                            HStack(spacing: 12) {
+                                Image(systemName: "lightbulb.fill")
+                                    .foregroundStyle(AppTheme.Category.electrical)
+                                VStack(alignment: .leading, spacing: 4) {
+                                    Text("Smart suggestion")
+                                        .font(.caption)
+                                        .foregroundStyle(.secondary)
+                                    Text("\(formatSuggestion(suggestion.value)) \(suggestion.unit)")
+                                        .font(.headline)
+                                        .fontDesign(.monospaced)
+                                }
+                                Spacer()
+                            }
+                            .padding(12)
+                            .background(AppTheme.Category.electrical.opacity(0.12))
+                            .clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous))
+                        }
+                    }
+                    
                     Button {
                         historyManager.add(formulaName: selectedCategory.rawValue, result: "\(result) \(toUnits[toUnitIndex])")
                     } label: {
@@ -99,6 +126,11 @@ struct UnitConverterView: View {
             .numericKeyboardToolbar()
             .navigationTitle("Unit Converter")
         }
+    }
+    
+    private func formatSuggestion(_ v: Double) -> String {
+        if v == floor(v) { return String(Int(v)) }
+        return String(format: "%.4g", v)
     }
     
     private func convert(value: Double, from: Int, to: Int) -> Double {

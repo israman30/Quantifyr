@@ -66,9 +66,15 @@ struct PowerView: View {
     var body: some View {
         ScrollView {
             VStack(spacing: 20) {
-                FormulaHelperView(
+                FormulaVisualizerView(
                     formula: formula.rawValue,
-                    variables: ["P = Power (W)", "V = Voltage (V)", "I = Current (A)", "R = Resistance (Ω)"]
+                    variables: [
+                        FormulaVariable(id: "p", symbol: "P", name: "Power", unit: "Watts (W)", color: AppTheme.Category.electrical, icon: "gauge.with.dots.needle.67percent"),
+                        FormulaVariable(id: "v", symbol: "V", name: "Voltage", unit: "Volts (V)", color: .blue, icon: "bolt.fill"),
+                        FormulaVariable(id: "i", symbol: "I", name: "Current", unit: "Amps (A)", color: .green, icon: "arrow.right"),
+                        FormulaVariable(id: "r", symbol: "R", name: "Resistance", unit: "Ohms (Ω)", color: .orange, icon: "rectangle.3.group")
+                    ],
+                    title: "Power Law"
                 )
                 
                 Form {

@@ -264,9 +264,15 @@ struct HomeView: View {
             
             VStack(spacing: 12) {
                 FeatureBadge(
-                    title: "Interactive Formulas",
-                    subtitle: "Visual display: V = I × R",
+                    title: "Formula Visualizer",
+                    subtitle: "Color-coded variables, tap to learn",
                     icon: "function"
+                )
+                
+                FeatureBadge(
+                    title: "Unit Intelligence",
+                    subtitle: "1000 m → suggests 1 km",
+                    icon: "lightbulb.fill"
                 )
                 
                 FeatureBadge(

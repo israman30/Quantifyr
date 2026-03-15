@@ -38,10 +38,7 @@ struct ForceView: View {
     var body: some View {
         ScrollView {
             VStack(spacing: 20) {
-                FormulaHelperView(
-                    formula: "F = m × a",
-                    variables: ["F = Force (N)", "m = Mass (kg)", "a = Acceleration (m/s²)"]
-                )
+                FormulaVisualizerView.force()
                 
                 Form {
                     Section("Input Values") {
