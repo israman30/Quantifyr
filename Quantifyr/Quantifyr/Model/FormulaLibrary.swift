@@ -24,7 +24,7 @@ struct FormulaLibrary {
         FormulaLibraryItem(id: "ohms_law", name: "Ohm's Law", formula: "V = I × R", icon: "bolt.fill"),
         FormulaLibraryItem(id: "power", name: "Power Law", formula: "P = V × I", icon: "gauge.with.dots.needle.67percent"),
         FormulaLibraryItem(id: "resistor", name: "Resistor Series/Parallel", formula: "R_total = R₁+R₂+... or 1/R₁+1/R₂+...", icon: "rectangle.3.group"),
-        FormulaLibraryItem(id: "capacitance", name: "Capacitance", formula: "Q = CV", icon: "capacitor.fill")
+        FormulaLibraryItem(id: "capacitance", name: "Capacitance", formula: "Q = CV", icon: "selection.pin.in.out")
     ]
     
     static let physics: [FormulaLibraryItem] = [
