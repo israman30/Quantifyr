@@ -39,7 +39,9 @@ enum FormulaRegistry {
         FormulaEntry(id: "velocity", name: "Velocity", formula: "v = d / t", category: "Physics", keywords: ["velocity", "distance", "time", "speed"]),
         FormulaEntry(id: "wavelength", name: "Wavelength", formula: "λ = v / f", category: "Frequency", keywords: ["wavelength", "frequency", "velocity", "wave"]),
         FormulaEntry(id: "rc_filter", name: "RC Filter", formula: "f = 1 / (2πRC)", category: "Frequency", keywords: ["rc", "filter", "frequency", "cutoff"]),
-        FormulaEntry(id: "metric_prefix", name: "Metric Prefix", formula: "kilo, mega, giga, milli, micro", category: "Math", keywords: ["metric", "prefix", "kilo", "mega", "giga", "milli", "micro", "nano"])
+        FormulaEntry(id: "metric_prefix", name: "Metric Prefix", formula: "kilo, mega, giga, milli, micro", category: "Math", keywords: ["metric", "prefix", "kilo", "mega", "giga", "milli", "micro", "nano"]),
+        FormulaEntry(id: "graph_equations", name: "Graph Equations", formula: "y = f(x)", category: "Math", keywords: ["graph", "plot", "equation", "chart", "xy", "sin", "cos"]),
+        FormulaEntry(id: "constants", name: "Engineering Constants", formula: "π, c, G, h, ε₀, ...", category: "Reference", keywords: ["constants", "pi", "planck", "speed of light", "gravity", "avogadro"])
     ]
     
     static func search(_ query: String) -> [FormulaEntry] {
@@ -71,6 +73,8 @@ enum FormulaRegistry {
         case "wavelength": WavelengthView()
         case "rc_filter": RCFilterView()
         case "metric_prefix": MetricPrefixView()
+        case "graph_equations": GraphView()
+        case "constants": ConstantsView()
         default: EmptyView()
         }
     }
