@@ -109,6 +109,7 @@ struct MetricPrefixView: View {
             }
             .padding()
         }
+        .numericKeyboardToolbar()
         .navigationTitle("Metric Prefix")
     }
 }

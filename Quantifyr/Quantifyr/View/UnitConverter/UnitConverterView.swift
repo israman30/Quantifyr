@@ -96,6 +96,7 @@ struct UnitConverterView: View {
                     .disabled(!canSaveToHistory)
                 }
             }
+            .numericKeyboardToolbar()
             .navigationTitle("Unit Converter")
         }
     }

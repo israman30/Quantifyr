@@ -7,39 +7,29 @@
 
 import SwiftUI
 
-enum ElectricalTool: String, CaseIterable {
-    case ohmsLaw = "Ohm's Law"
-    case power = "Power"
-    case resistor = "Resistor"
-    case capacitance = "Capacitance"
-}
-
 struct ElectricalView: View {
     var body: some View {
         NavigationStack {
             List {
-                NavigationLink {
-                    OhmsLawView()
-                } label: {
-                    Label("Ohm's Law", systemImage: "bolt.fill")
-                }
-                
-                NavigationLink {
-                    PowerView()
-                } label: {
-                    Label("Power Calculation", systemImage: "gauge.with.dots.needle.67percent")
-                }
-                
-                NavigationLink {
-                    ResistorView()
-                } label: {
-                    Label("Resistor Calculator", systemImage: "rectangle.3.group")
-                }
-                
-                NavigationLink {
-                    CapacitanceView()
-                } label: {
-                    Label("Capacitance Calculator", systemImage: "capacitor.fill")
+                ForEach(FormulaLibrary.electrical) { item in
+                    NavigationLink {
+                        FormulaRegistry.destination(for: item.id)
+                    } label: {
+                        HStack(spacing: 12) {
+                            Image(systemName: item.icon)
+                                .font(.title3)
+                                .foregroundStyle(.primary)
+                                .frame(width: 32, alignment: .center)
+                            VStack(alignment: .leading, spacing: 2) {
+                                Text(item.name)
+                                    .font(.headline)
+                                Text(item.formula)
+                                    .font(.caption)
+                                    .fontDesign(.monospaced)
+                                    .foregroundStyle(.secondary)
+                            }
+                        }
+                    }
                 }
             }
             .navigationTitle("Electrical")

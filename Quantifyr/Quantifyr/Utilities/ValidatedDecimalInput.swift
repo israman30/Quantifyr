@@ -47,4 +47,25 @@ extension View {
     func validatedDecimalInput(_ binding: Binding<String>) -> some View {
         modifier(DecimalInputModifier(text: binding))
     }
+    
+    /// Adds a Done toolbar above the numeric keyboard for easy dismissal.
+    /// Use with TextFields that have .keyboardType(.decimalPad).
+    func numericKeyboardToolbar() -> some View {
+        modifier(NumericKeyboardToolbarModifier())
+    }
+}
+
+/// Adds Done button above decimal pad keyboard for better UX.
+struct NumericKeyboardToolbarModifier: ViewModifier {
+    func body(content: Content) -> some View {
+        content
+            .toolbar {
+                ToolbarItemGroup(placement: .keyboard) {
+                    Spacer()
+                    Button("Done") {
+                        UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
+                    }
+                }
+            }
+    }
 }

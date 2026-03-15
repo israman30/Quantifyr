@@ -74,6 +74,7 @@ struct CapacitanceView: View {
             }
             .padding()
         }
+        .numericKeyboardToolbar()
         .navigationTitle("Capacitance")
     }
 }

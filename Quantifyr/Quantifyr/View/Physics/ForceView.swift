@@ -85,6 +85,7 @@ struct ForceView: View {
             }
             .padding()
         }
+        .numericKeyboardToolbar()
         .navigationTitle("Force")
         .toolbar {
             ToolbarItem(placement: .topBarTrailing) {

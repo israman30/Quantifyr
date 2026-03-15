@@ -198,6 +198,60 @@ struct HomeView: View {
                     destination: { MetricPrefixView() }
                 )
             }
+            
+            // Advanced Features (Future Versions)
+            advancedFeaturesSection
+        }
+    }
+    
+    private var advancedFeaturesSection: some View {
+        VStack(alignment: .leading, spacing: 12) {
+            Text("Advanced Features")
+                .font(.headline)
+                .foregroundStyle(.secondary)
+            
+            Text("Professional tools for students")
+                .font(.subheadline)
+                .foregroundStyle(.tertiary)
+                .padding(.bottom, 4)
+            
+            VStack(spacing: 12) {
+                FeatureBadge(
+                    title: "Interactive Formulas",
+                    subtitle: "Visual display: V = I × R",
+                    icon: "function"
+                )
+                
+                FeatureBadge(
+                    title: "Calculation Steps",
+                    subtitle: "Step-by-step solutions",
+                    icon: "list.number"
+                )
+                
+                FeatureBadge(
+                    title: "Smart Keyboard",
+                    subtitle: "Numeric pad + Done button",
+                    icon: "keyboard"
+                )
+                
+                FeatureBadge(
+                    title: "Tap to Copy",
+                    subtitle: "Tap result → copy to clipboard",
+                    icon: "doc.on.doc"
+                )
+                
+                FeatureBadge(
+                    title: "Calculation History",
+                    subtitle: "Recent calculations above",
+                    icon: "clock.arrow.circlepath"
+                )
+                
+                FutureFeatureCard(
+                    title: "Graph Calculator",
+                    subtitle: "Plot equations (coming soon)",
+                    icon: "chart.line.uptrend.xyaxis"
+                )
+            }
         }
     }
 }
@@ -264,6 +318,73 @@ struct FavoriteChip: View {
         .padding(.vertical, 10)
         .background(.background)
         .clipShape(Capsule())
+    }
+}
+
+// MARK: - Feature Badge (implemented)
+struct FeatureBadge: View {
+    let title: String
+    let subtitle: String
+    let icon: String
+    
+    var body: some View {
+        HStack(spacing: 16) {
+            Image(systemName: icon)
+                .font(.title2)
+                .foregroundStyle(.green)
+                .frame(width: 44, height: 44)
+                .background(.green.opacity(0.15))
+                .clipShape(RoundedRectangle(cornerRadius: 10))
+            
+            VStack(alignment: .leading, spacing: 4) {
+                Text(title)
+                    .font(.headline)
+                    .foregroundStyle(.primary)
+                Text(subtitle)
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
+            }
+            
+            Spacer()
+            
+            Image(systemName: "checkmark.circle.fill")
+                .foregroundStyle(.green)
+        }
+        .padding()
+        .background(.background)
+        .clipShape(RoundedRectangle(cornerRadius: 16))
+    }
+}
+
+// MARK: - Future Feature Card
+struct FutureFeatureCard: View {
+    let title: String
+    let subtitle: String
+    let icon: String
+    
+    var body: some View {
+        HStack(spacing: 16) {
+            Image(systemName: icon)
+                .font(.title2)
+                .foregroundStyle(.tertiary)
+                .frame(width: 44, height: 44)
+                .background(.primary.opacity(0.08))
+                .clipShape(RoundedRectangle(cornerRadius: 10))
+            
+            VStack(alignment: .leading, spacing: 4) {
+                Text(title)
+                    .font(.headline)
+                    .foregroundStyle(.secondary)
+                Text(subtitle)
+                    .font(.caption)
+                    .foregroundStyle(.tertiary)
+            }
+            
+            Spacer()
+        }
+        .padding()
+        .background(.background.opacity(0.7))
+        .clipShape(RoundedRectangle(cornerRadius: 16))
     }
 }
 

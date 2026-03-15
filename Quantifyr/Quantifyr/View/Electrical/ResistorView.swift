@@ -102,6 +102,7 @@ struct ResistorView: View {
             }
             .padding()
         }
+        .numericKeyboardToolbar()
         .navigationTitle("Resistors")
     }
 }
