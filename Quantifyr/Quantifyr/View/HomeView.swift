@@ -7,6 +7,7 @@
 
 import SwiftUI
 
+// MARK: - Home View
 struct HomeView: View {
     @Environment(HistoryManager.self) private var historyManager
     @Environment(FavoritesManager.self) private var favoritesManager
@@ -44,8 +45,18 @@ struct HomeView: View {
                 .padding(.vertical, 20)
                 .padding(.horizontal, 16)
             }
-            .background(Color(.systemGroupedBackground))
+            .background(
+                LinearGradient(
+                    colors: [
+                        Color(.systemGroupedBackground),
+                        Color(.systemGroupedBackground).opacity(0.95)
+                    ],
+                    startPoint: .top,
+                    endPoint: .bottom
+                )
+            )
             .navigationTitle("Quantifyr")
+            .navigationBarTitleDisplayMode(.large)
             .searchable(text: $searchText, prompt: "Search formulas: voltage, force, frequency...")
             .navigationDestination(for: String.self) { formulaId in
                 FormulaRegistry.destination(for: formulaId)
@@ -54,17 +65,18 @@ struct HomeView: View {
     }
     
     private var searchSection: some View {
-        VStack(alignment: .leading, spacing: 8) {
+        VStack(alignment: .leading, spacing: 12) {
             if !searchText.isEmpty {
                 Text("Search results")
-                    .font(.headline)
-                    .foregroundStyle(.secondary)
+                    .font(AppTypography.sectionTitle)
+                    .foregroundStyle(AppTheme.sectionTitle)
                 
                 if searchResults.isEmpty {
                     Text("No formulas match \"\(searchText)\"")
-                        .font(.subheadline)
-                        .foregroundStyle(.tertiary)
-                        .padding(.vertical, 12)
+                        .font(AppTypography.subtitle)
+                        .foregroundStyle(AppTheme.sectionSubtitle)
+                        .padding(.vertical, 16)
+                        .frame(maxWidth: .infinity, alignment: .leading)
                 } else {
                     ForEach(searchResults) { entry in
                         NavigationLink(value: entry.id) {
@@ -78,29 +90,31 @@ struct HomeView: View {
     }
     
     private var recentCalculationsSection: some View {
-        VStack(alignment: .leading, spacing: 12) {
+        VStack(alignment: .leading, spacing: 14) {
             HStack {
                 Text("Recent calculations")
-                    .font(.headline)
-                    .foregroundStyle(.secondary)
+                    .font(AppTypography.sectionTitle)
+                    .foregroundStyle(AppTheme.sectionTitle)
                 Spacer()
                 Button("Clear") {
                     historyManager.clear()
                 }
-                .font(.caption)
-                .foregroundStyle(.secondary)
+                .font(AppTypography.caption2)
+                .foregroundStyle(AppTheme.accent)
+                .fontWeight(.medium)
             }
             
             VStack(spacing: 0) {
                 ForEach(historyManager.records.prefix(10)) { record in
                     HStack {
-                        VStack(alignment: .leading, spacing: 2) {
+                        VStack(alignment: .leading, spacing: 4) {
                             Text(record.formulaName)
-                                .font(.subheadline)
-                                .fontWeight(.medium)
+                                .font(AppTypography.subtitle)
+                                .fontWeight(.semibold)
+                                .foregroundStyle(.primary)
                             Text(record.result)
-                                .font(.caption)
-                                .foregroundStyle(.secondary)
+                                .font(AppTypography.caption)
+                                .foregroundStyle(AppTheme.sectionSubtitle)
                         }
                         Spacer()
                         Menu {
@@ -114,32 +128,31 @@ struct HomeView: View {
                             }
                         } label: {
                             Image(systemName: "ellipsis.circle")
-                                .font(.body)
-                                .foregroundStyle(.secondary)
+                                .font(.system(size: 18))
+                                .foregroundStyle(AppTheme.sectionSubtitle)
                         }
                     }
-                    .padding(.vertical, 10)
-                    .padding(.horizontal, 12)
+                    .padding(.vertical, 14)
+                    .padding(.horizontal, 16)
                     
                     if record.id != historyManager.records.prefix(10).last?.id {
                         Divider()
-                            .padding(.leading, 12)
+                            .padding(.leading, 16)
                     }
                 }
             }
-            .background(.background)
-            .clipShape(RoundedRectangle(cornerRadius: 12))
+            .cardStyle(cornerRadius: 14, hasShadow: true)
         }
     }
     
     private var favoritesSection: some View {
-        VStack(alignment: .leading, spacing: 12) {
+        VStack(alignment: .leading, spacing: 14) {
             Text("Favorites")
-                .font(.headline)
-                .foregroundStyle(.secondary)
+                .font(AppTypography.sectionTitle)
+                .foregroundStyle(AppTheme.sectionTitle)
             
             ScrollView(.horizontal, showsIndicators: false) {
-                HStack(spacing: 10) {
+                HStack(spacing: 12) {
                     ForEach(favoriteEntries) { entry in
                         NavigationLink(value: entry.id) {
                             FavoriteChip(entry: entry)
@@ -147,28 +160,29 @@ struct HomeView: View {
                         .buttonStyle(.plain)
                     }
                 }
-                .padding(.vertical, 4)
+                .padding(.vertical, 6)
             }
-            .frame(height: 48)
+            .frame(height: 52)
         }
     }
     
     private var categorySection: some View {
-        VStack(alignment: .leading, spacing: 12) {
+        VStack(alignment: .leading, spacing: 14) {
             Text("Scientific Toolkit")
-                .font(.headline)
-                .foregroundStyle(.secondary)
+                .font(AppTypography.sectionTitle)
+                .foregroundStyle(AppTheme.sectionTitle)
             
             Text("Enter known values → get results instantly")
-                .font(.subheadline)
-                .foregroundStyle(.tertiary)
-                .padding(.bottom, 4)
+                .font(AppTypography.subtitle)
+                .foregroundStyle(AppTheme.sectionSubtitle)
+                .padding(.bottom, 6)
             
-            VStack(spacing: 12) {
+            VStack(spacing: 14) {
                 CategoryCardLink(
                     title: "Unit Converter",
                     subtitle: "Length, weight, temperature, speed, energy",
                     icon: "arrow.left.arrow.right",
+                    accent: AppTheme.Category.unitConverter,
                     destination: { UnitConverterView() }
                 )
                 
@@ -176,6 +190,7 @@ struct HomeView: View {
                     title: "Electrical",
                     subtitle: "Ohm's Law, Power, Resistors, Capacitance",
                     icon: "bolt.fill",
+                    accent: AppTheme.Category.electrical,
                     destination: { ElectricalView() }
                 )
                 
@@ -183,6 +198,7 @@ struct HomeView: View {
                     title: "Physics",
                     subtitle: "Force, Kinetic Energy, Momentum",
                     icon: "atom",
+                    accent: AppTheme.Category.physics,
                     destination: { PhysicsView() }
                 )
                 
@@ -190,6 +206,7 @@ struct HomeView: View {
                     title: "Frequency",
                     subtitle: "Wavelength, RC filter",
                     icon: "waveform",
+                    accent: AppTheme.Category.frequency,
                     destination: { FrequencyView() }
                 )
                 
@@ -197,6 +214,7 @@ struct HomeView: View {
                     title: "Math",
                     subtitle: "Metric prefixes: kilo, mega, giga, milli, micro, nano",
                     icon: "number",
+                    accent: AppTheme.Category.math,
                     destination: { MetricPrefixView() }
                 )
             }
@@ -207,15 +225,15 @@ struct HomeView: View {
     }
     
     private var advancedFeaturesSection: some View {
-        VStack(alignment: .leading, spacing: 12) {
+        VStack(alignment: .leading, spacing: 14) {
             Text("Advanced Features")
-                .font(.headline)
-                .foregroundStyle(.secondary)
+                .font(AppTypography.sectionTitle)
+                .foregroundStyle(AppTheme.sectionTitle)
             
             Text("Professional tools for students")
-                .font(.subheadline)
-                .foregroundStyle(.tertiary)
-                .padding(.bottom, 4)
+                .font(AppTypography.subtitle)
+                .foregroundStyle(AppTheme.sectionSubtitle)
+                .padding(.bottom, 6)
             
             VStack(spacing: 12) {
                 FeatureBadge(
@@ -263,13 +281,14 @@ struct CategoryCardLink<Destination: View>: View {
     let title: String
     var subtitle: String? = nil
     let icon: String
+    var accent: Color = AppTheme.accent
     @ViewBuilder let destination: () -> Destination
     
     var body: some View {
         NavigationLink {
             destination()
         } label: {
-            FeatureCard(title: title, subtitle: subtitle, icon: icon)
+            FeatureCard(title: title, subtitle: subtitle, icon: icon, accent: accent)
         }
         .buttonStyle(.plain)
     }
@@ -282,27 +301,28 @@ struct FormulaSearchRow: View {
     
     var body: some View {
         HStack(spacing: 16) {
-            VStack(alignment: .leading, spacing: 4) {
+            VStack(alignment: .leading, spacing: 6) {
                 Text(entry.name)
-                    .font(.headline)
+                    .font(AppTypography.cardTitle)
                     .foregroundStyle(.primary)
                 Text(entry.formula)
-                    .font(.caption)
+                    .font(AppTypography.caption)
                     .fontDesign(.monospaced)
-                    .foregroundStyle(.secondary)
+                    .foregroundStyle(AppTheme.sectionSubtitle)
             }
             Spacer()
             Button {
                 favoritesManager.toggle(entry.id)
             } label: {
                 Image(systemName: favoritesManager.isFavorite(entry.id) ? "star.fill" : "star")
-                    .foregroundStyle(favoritesManager.isFavorite(entry.id) ? .yellow : .secondary)
+                    .font(.system(size: 18))
+                    .foregroundStyle(favoritesManager.isFavorite(entry.id) ? AppTheme.Category.success : AppTheme.sectionSubtitle)
             }
             .buttonStyle(.plain)
+            .accessibilityLabel(favoritesManager.isFavorite(entry.id) ? "Remove from favorites" : "Add to favorites")
         }
-        .padding()
-        .background(.background)
-        .clipShape(RoundedRectangle(cornerRadius: 12))
+        .padding(16)
+        .cardStyle(cornerRadius: 14, hasShadow: true)
     }
 }
 
@@ -313,12 +333,17 @@ struct FavoriteChip: View {
     var body: some View {
         HStack(spacing: 6) {
             Text(entry.name)
-                .font(.subheadline)
-                .fontWeight(.medium)
+                .font(AppTypography.subtitle)
+                .fontWeight(.semibold)
+                .foregroundStyle(AppTheme.accent)
         }
-        .padding(.horizontal, 14)
-        .padding(.vertical, 10)
-        .background(.background)
+        .padding(.horizontal, 18)
+        .padding(.vertical, 12)
+        .background(AppTheme.accentLight)
+        .overlay(
+            RoundedRectangle(cornerRadius: 24, style: .continuous)
+                .stroke(AppTheme.accent.opacity(0.4), lineWidth: 1)
+        )
         .clipShape(Capsule())
     }
 }
@@ -332,29 +357,29 @@ struct FeatureBadge: View {
     var body: some View {
         HStack(spacing: 16) {
             Image(systemName: icon)
-                .font(.title2)
-                .foregroundStyle(.green)
-                .frame(width: 44, height: 44)
-                .background(.green.opacity(0.15))
-                .clipShape(RoundedRectangle(cornerRadius: 10))
+                .font(.system(size: 20, weight: .semibold))
+                .foregroundStyle(AppTheme.Category.success)
+                .frame(width: 48, height: 48)
+                .background(AppTheme.Category.success.opacity(0.15))
+                .clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous))
             
-            VStack(alignment: .leading, spacing: 4) {
+            VStack(alignment: .leading, spacing: 6) {
                 Text(title)
-                    .font(.headline)
+                    .font(AppTypography.cardTitle)
                     .foregroundStyle(.primary)
                 Text(subtitle)
-                    .font(.caption)
-                    .foregroundStyle(.secondary)
+                    .font(AppTypography.caption)
+                    .foregroundStyle(AppTheme.sectionSubtitle)
             }
             
             Spacer()
             
             Image(systemName: "checkmark.circle.fill")
-                .foregroundStyle(.green)
+                .font(.system(size: 22))
+                .foregroundStyle(AppTheme.Category.success)
         }
-        .padding()
-        .background(.background)
-        .clipShape(RoundedRectangle(cornerRadius: 16))
+        .padding(16)
+        .cardStyle(cornerRadius: 16, hasShadow: true)
     }
 }
 
@@ -367,26 +392,26 @@ struct FutureFeatureCard: View {
     var body: some View {
         HStack(spacing: 16) {
             Image(systemName: icon)
-                .font(.title2)
-                .foregroundStyle(.tertiary)
-                .frame(width: 44, height: 44)
-                .background(.primary.opacity(0.08))
-                .clipShape(RoundedRectangle(cornerRadius: 10))
+                .font(.system(size: 20, weight: .medium))
+                .foregroundStyle(AppTheme.Category.comingSoon)
+                .frame(width: 48, height: 48)
+                .background(AppTheme.Category.comingSoon.opacity(0.12))
+                .clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous))
             
-            VStack(alignment: .leading, spacing: 4) {
+            VStack(alignment: .leading, spacing: 6) {
                 Text(title)
-                    .font(.headline)
-                    .foregroundStyle(.secondary)
+                    .font(AppTypography.cardTitle)
+                    .foregroundStyle(AppTheme.sectionSubtitle)
                 Text(subtitle)
-                    .font(.caption)
-                    .foregroundStyle(.tertiary)
+                    .font(AppTypography.caption)
+                    .foregroundStyle(AppTheme.Category.comingSoon)
             }
             
             Spacer()
         }
-        .padding()
-        .background(.background.opacity(0.7))
-        .clipShape(RoundedRectangle(cornerRadius: 16))
+        .padding(16)
+        .background(AppTheme.cardBackground.opacity(0.8))
+        .clipShape(RoundedRectangle(cornerRadius: 16, style: .continuous))
     }
 }
 
@@ -395,37 +420,37 @@ struct FeatureCard: View {
     let title: String
     var subtitle: String? = nil
     let icon: String
+    var accent: Color = AppTheme.accent
     
     var body: some View {
         HStack(spacing: 16) {
             Image(systemName: icon)
-                .font(.title2)
-                .foregroundStyle(.primary)
-                .frame(width: 44, height: 44)
-                .background(.primary.opacity(0.15))
-                .clipShape(RoundedRectangle(cornerRadius: 10))
+                .font(.system(size: 20, weight: .semibold))
+                .foregroundStyle(accent)
+                .frame(width: 48, height: 48)
+                .background(accent.opacity(0.15))
+                .clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous))
             
-            VStack(alignment: .leading, spacing: 4) {
+            VStack(alignment: .leading, spacing: 6) {
                 Text(title)
-                    .font(.headline)
+                    .font(AppTypography.cardTitle)
                     .foregroundStyle(.primary)
                 
                 if let subtitle {
                     Text(subtitle)
-                        .font(.caption)
-                        .foregroundStyle(.secondary)
+                        .font(AppTypography.caption)
+                        .foregroundStyle(AppTheme.sectionSubtitle)
                 }
             }
             
             Spacer()
             
             Image(systemName: "chevron.right")
-                .font(.caption)
-                .foregroundStyle(.tertiary)
+                .font(.system(size: 14, weight: .semibold))
+                .foregroundStyle(accent.opacity(0.8))
         }
-        .padding()
-        .background(.background)
-        .clipShape(RoundedRectangle(cornerRadius: 16))
+        .padding(16)
+        .cardStyle(cornerRadius: 16, hasShadow: true)
     }
 }
 
