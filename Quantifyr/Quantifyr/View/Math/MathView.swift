@@ -1,16 +1,16 @@
 //
-//  PhysicsView.swift
+//  MathView.swift
 //  Quantifyr
 //
-//  Created by Israel Manzo on 3/13/26.
+//  Created by Israel Manzo on 3/15/26.
 //
 
 import SwiftUI
 
-struct PhysicsView: View {
+struct MathView: View {
     var body: some View {
         List {
-            ForEach(FormulaLibrary.physics) { item in
+            ForEach(FormulaLibrary.math) { item in
                 NavigationLink {
                     FormulaRegistry.destination(for: item.id)
                 } label: {
@@ -31,14 +31,13 @@ struct PhysicsView: View {
                 }
             }
         }
-        .navigationTitle("Physics")
+        .navigationTitle("Mathematics")
     }
 }
 
-
 #Preview {
     NavigationStack {
-        PhysicsView()
+        MathView()
             .environment(HistoryManager.shared)
             .environment(FavoritesManager.shared)
             .environment(SpotlightRouter())

@@ -1,63 +1,65 @@
 //
-//  KineticEnergyView.swift
+//  VolumeCylinderView.swift
 //  Quantifyr
 //
-//  Created by Israel Manzo on 3/13/26.
+//  Created by Israel Manzo on 3/15/26.
 //
 
 import SwiftUI
 
-struct KineticEnergyView: View {
+struct VolumeCylinderView: View {
     @Environment(HistoryManager.self) private var historyManager
     @Environment(FavoritesManager.self) private var favoritesManager
-    @State private var mass = ""
-    @State private var velocity = ""
+    @State private var radius = ""
+    @State private var height = ""
     @State private var hasCalculated = false
     
-    private var kineticEnergy: Double? {
-        guard let m = Double(mass), let v = Double(velocity) else { return nil }
-        return 0.5 * m * v * v
+    private let pi = Double.pi
+    
+    private var volume: Double? {
+        guard let r = Double(radius), let h = Double(height), r >= 0, h >= 0 else { return nil }
+        return pi * r * r * h
     }
     
     private var resultString: String? {
-        guard let e = kineticEnergy else { return nil }
-        return "KE = \(String(format: "%.4g", e)) J"
+        guard let v = volume else { return nil }
+        return "V = \(String(format: "%.4g", v))"
     }
     
     private var steps: [String] {
-        guard let _ = kineticEnergy, let m = Double(mass), let v = Double(velocity) else { return [] }
+        guard let _ = volume, let r = Double(radius), let h = Double(height) else { return [] }
         return [
-            "Given: m = \(m) kg, v = \(v) m/s",
-            "KE = ½mv²",
-            "KE = ½ × \(m) × \(v)²"
+            "Given: r = \(r), h = \(h)",
+            "V = πr²h",
+            "V = π × \(r)² × \(h)"
         ]
     }
     
-    private var canCalculate: Bool { kineticEnergy != nil }
+    private var canCalculate: Bool { volume != nil }
     
     var body: some View {
         ScrollView {
             VStack(spacing: 20) {
                 FormulaHelperView(
-                    formula: "KE = ½mv²",
-                    variables: ["KE = Kinetic Energy (J)", "m = Mass (kg)", "v = Velocity (m/s)"]
+                    formula: "V = πr²h",
+                    variables: ["V = Volume", "r = Radius", "h = Height"]
                 )
                 
                 Form {
                     Section("Input Values") {
-                        TextField("Mass (kg)", text: $mass)
+                        TextField("Radius (r)", text: $radius)
                             .keyboardType(.decimalPad)
-                            .validatedDecimalInput($mass)
-                        TextField("Velocity (m/s)", text: $velocity)
+                            .validatedDecimalInput($radius)
+                        TextField("Height (h)", text: $height)
                             .keyboardType(.decimalPad)
-                            .validatedDecimalInput($velocity)
+                            .validatedDecimalInput($height)
                     }
                     
                     Section {
                         Button {
                             hasCalculated = true
                             if let str = resultString {
-                                historyManager.add(formulaName: "Kinetic Energy", result: str)
+                                historyManager.add(formulaName: "Volume Cylinder", result: str)
                             }
                         } label: {
                             Text("Calculate")
@@ -72,12 +74,8 @@ struct KineticEnergyView: View {
                         Section("Result") {
                             ResultWithActionsView(result: resultString, fullText: (steps + [resultString]).joined(separator: "\n"))
                         }
-                        
                         Section {
-                            StepByStepView(
-                                steps: steps,
-                                result: resultString
-                            )
+                            StepByStepView(steps: steps, result: resultString)
                         }
                     }
                 }
@@ -86,14 +84,14 @@ struct KineticEnergyView: View {
             .padding()
         }
         .numericKeyboardToolbar()
-        .navigationTitle("Kinetic Energy")
+        .navigationTitle("Volume Cylinder")
         .toolbar {
             ToolbarItem(placement: .topBarTrailing) {
                 Button {
-                    favoritesManager.toggle("kinetic_energy")
+                    favoritesManager.toggle("volume_cylinder")
                 } label: {
-                    Image(systemName: favoritesManager.isFavorite("kinetic_energy") ? "star.fill" : "star")
-                        .foregroundStyle(favoritesManager.isFavorite("kinetic_energy") ? .yellow : .secondary)
+                    Image(systemName: favoritesManager.isFavorite("volume_cylinder") ? "star.fill" : "star")
+                        .foregroundStyle(favoritesManager.isFavorite("volume_cylinder") ? .yellow : .secondary)
                 }
             }
         }
@@ -102,7 +100,7 @@ struct KineticEnergyView: View {
 
 #Preview {
     NavigationStack {
-        KineticEnergyView()
+        VolumeCylinderView()
             .environment(HistoryManager.shared)
             .environment(FavoritesManager.shared)
     }

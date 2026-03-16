@@ -1,63 +1,65 @@
 //
-//  KineticEnergyView.swift
+//  InductiveReactanceView.swift
 //  Quantifyr
 //
-//  Created by Israel Manzo on 3/13/26.
+//  Created by Israel Manzo on 3/15/26.
 //
 
 import SwiftUI
 
-struct KineticEnergyView: View {
+struct InductiveReactanceView: View {
     @Environment(HistoryManager.self) private var historyManager
     @Environment(FavoritesManager.self) private var favoritesManager
-    @State private var mass = ""
-    @State private var velocity = ""
+    @State private var frequency = ""
+    @State private var inductance = ""
     @State private var hasCalculated = false
     
-    private var kineticEnergy: Double? {
-        guard let m = Double(mass), let v = Double(velocity) else { return nil }
-        return 0.5 * m * v * v
+    private let pi = Double.pi
+    
+    private var inductiveReactance: Double? {
+        guard let f = Double(frequency), let l = Double(inductance) else { return nil }
+        return 2 * pi * f * l
     }
     
     private var resultString: String? {
-        guard let e = kineticEnergy else { return nil }
-        return "KE = \(String(format: "%.4g", e)) J"
+        guard let xl = inductiveReactance else { return nil }
+        return "Xₗ = \(String(format: "%.4g", xl)) Ω"
     }
     
     private var steps: [String] {
-        guard let _ = kineticEnergy, let m = Double(mass), let v = Double(velocity) else { return [] }
+        guard let _ = inductiveReactance, let f = Double(frequency), let l = Double(inductance) else { return [] }
         return [
-            "Given: m = \(m) kg, v = \(v) m/s",
-            "KE = ½mv²",
-            "KE = ½ × \(m) × \(v)²"
+            "Given: f = \(f) Hz, L = \(l) H",
+            "Xₗ = 2πfL",
+            "Xₗ = 2 × π × \(f) × \(l)"
         ]
     }
     
-    private var canCalculate: Bool { kineticEnergy != nil }
+    private var canCalculate: Bool { inductiveReactance != nil }
     
     var body: some View {
         ScrollView {
             VStack(spacing: 20) {
                 FormulaHelperView(
-                    formula: "KE = ½mv²",
-                    variables: ["KE = Kinetic Energy (J)", "m = Mass (kg)", "v = Velocity (m/s)"]
+                    formula: "Xₗ = 2πfL",
+                    variables: ["Xₗ = Inductive reactance (Ω)", "f = Frequency (Hz)", "L = Inductance (H)"]
                 )
                 
                 Form {
                     Section("Input Values") {
-                        TextField("Mass (kg)", text: $mass)
+                        TextField("Frequency (Hz)", text: $frequency)
                             .keyboardType(.decimalPad)
-                            .validatedDecimalInput($mass)
-                        TextField("Velocity (m/s)", text: $velocity)
+                            .validatedDecimalInput($frequency)
+                        TextField("Inductance (H)", text: $inductance)
                             .keyboardType(.decimalPad)
-                            .validatedDecimalInput($velocity)
+                            .validatedDecimalInput($inductance)
                     }
                     
                     Section {
                         Button {
                             hasCalculated = true
                             if let str = resultString {
-                                historyManager.add(formulaName: "Kinetic Energy", result: str)
+                                historyManager.add(formulaName: "Inductive Reactance", result: str)
                             }
                         } label: {
                             Text("Calculate")
@@ -86,14 +88,14 @@ struct KineticEnergyView: View {
             .padding()
         }
         .numericKeyboardToolbar()
-        .navigationTitle("Kinetic Energy")
+        .navigationTitle("Inductive Reactance")
         .toolbar {
             ToolbarItem(placement: .topBarTrailing) {
                 Button {
-                    favoritesManager.toggle("kinetic_energy")
+                    favoritesManager.toggle("inductive_reactance")
                 } label: {
-                    Image(systemName: favoritesManager.isFavorite("kinetic_energy") ? "star.fill" : "star")
-                        .foregroundStyle(favoritesManager.isFavorite("kinetic_energy") ? .yellow : .secondary)
+                    Image(systemName: favoritesManager.isFavorite("inductive_reactance") ? "star.fill" : "star")
+                        .foregroundStyle(favoritesManager.isFavorite("inductive_reactance") ? .yellow : .secondary)
                 }
             }
         }
@@ -102,7 +104,7 @@ struct KineticEnergyView: View {
 
 #Preview {
     NavigationStack {
-        KineticEnergyView()
+        InductiveReactanceView()
             .environment(HistoryManager.shared)
             .environment(FavoritesManager.shared)
     }

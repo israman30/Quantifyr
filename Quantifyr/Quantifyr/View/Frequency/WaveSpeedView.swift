@@ -1,63 +1,63 @@
 //
-//  KineticEnergyView.swift
+//  WaveSpeedView.swift
 //  Quantifyr
 //
-//  Created by Israel Manzo on 3/13/26.
+//  Created by Israel Manzo on 3/15/26.
 //
 
 import SwiftUI
 
-struct KineticEnergyView: View {
+struct WaveSpeedView: View {
     @Environment(HistoryManager.self) private var historyManager
     @Environment(FavoritesManager.self) private var favoritesManager
-    @State private var mass = ""
-    @State private var velocity = ""
+    @State private var frequency = ""
+    @State private var wavelength = ""
     @State private var hasCalculated = false
     
-    private var kineticEnergy: Double? {
-        guard let m = Double(mass), let v = Double(velocity) else { return nil }
-        return 0.5 * m * v * v
+    private var waveSpeed: Double? {
+        guard let f = Double(frequency), let lambda = Double(wavelength) else { return nil }
+        return f * lambda
     }
     
     private var resultString: String? {
-        guard let e = kineticEnergy else { return nil }
-        return "KE = \(String(format: "%.4g", e)) J"
+        guard let v = waveSpeed else { return nil }
+        return "v = \(String(format: "%.4g", v)) m/s"
     }
     
     private var steps: [String] {
-        guard let _ = kineticEnergy, let m = Double(mass), let v = Double(velocity) else { return [] }
+        guard let _ = waveSpeed, let f = Double(frequency), let lambda = Double(wavelength) else { return [] }
         return [
-            "Given: m = \(m) kg, v = \(v) m/s",
-            "KE = ½mv²",
-            "KE = ½ × \(m) × \(v)²"
+            "Given: f = \(f) Hz, λ = \(lambda) m",
+            "v = fλ",
+            "v = \(f) × \(lambda)"
         ]
     }
     
-    private var canCalculate: Bool { kineticEnergy != nil }
+    private var canCalculate: Bool { waveSpeed != nil }
     
     var body: some View {
         ScrollView {
             VStack(spacing: 20) {
                 FormulaHelperView(
-                    formula: "KE = ½mv²",
-                    variables: ["KE = Kinetic Energy (J)", "m = Mass (kg)", "v = Velocity (m/s)"]
+                    formula: "v = fλ",
+                    variables: ["v = Wave speed (m/s)", "f = Frequency (Hz)", "λ = Wavelength (m)"]
                 )
                 
                 Form {
                     Section("Input Values") {
-                        TextField("Mass (kg)", text: $mass)
+                        TextField("Frequency (Hz)", text: $frequency)
                             .keyboardType(.decimalPad)
-                            .validatedDecimalInput($mass)
-                        TextField("Velocity (m/s)", text: $velocity)
+                            .validatedDecimalInput($frequency)
+                        TextField("Wavelength (m)", text: $wavelength)
                             .keyboardType(.decimalPad)
-                            .validatedDecimalInput($velocity)
+                            .validatedDecimalInput($wavelength)
                     }
                     
                     Section {
                         Button {
                             hasCalculated = true
                             if let str = resultString {
-                                historyManager.add(formulaName: "Kinetic Energy", result: str)
+                                historyManager.add(formulaName: "Wave Speed", result: str)
                             }
                         } label: {
                             Text("Calculate")
@@ -86,14 +86,14 @@ struct KineticEnergyView: View {
             .padding()
         }
         .numericKeyboardToolbar()
-        .navigationTitle("Kinetic Energy")
+        .navigationTitle("Wave Speed")
         .toolbar {
             ToolbarItem(placement: .topBarTrailing) {
                 Button {
-                    favoritesManager.toggle("kinetic_energy")
+                    favoritesManager.toggle("wave_speed")
                 } label: {
-                    Image(systemName: favoritesManager.isFavorite("kinetic_energy") ? "star.fill" : "star")
-                        .foregroundStyle(favoritesManager.isFavorite("kinetic_energy") ? .yellow : .secondary)
+                    Image(systemName: favoritesManager.isFavorite("wave_speed") ? "star.fill" : "star")
+                        .foregroundStyle(favoritesManager.isFavorite("wave_speed") ? .yellow : .secondary)
                 }
             }
         }
@@ -102,7 +102,7 @@ struct KineticEnergyView: View {
 
 #Preview {
     NavigationStack {
-        KineticEnergyView()
+        WaveSpeedView()
             .environment(HistoryManager.shared)
             .environment(FavoritesManager.shared)
     }

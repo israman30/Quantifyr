@@ -1,63 +1,66 @@
 //
-//  KineticEnergyView.swift
+//  CapacitiveReactanceView.swift
 //  Quantifyr
 //
-//  Created by Israel Manzo on 3/13/26.
+//  Created by Israel Manzo on 3/15/26.
 //
 
 import SwiftUI
 
-struct KineticEnergyView: View {
+struct CapacitiveReactanceView: View {
     @Environment(HistoryManager.self) private var historyManager
     @Environment(FavoritesManager.self) private var favoritesManager
-    @State private var mass = ""
-    @State private var velocity = ""
+    @State private var frequency = ""
+    @State private var capacitance = ""
     @State private var hasCalculated = false
     
-    private var kineticEnergy: Double? {
-        guard let m = Double(mass), let v = Double(velocity) else { return nil }
-        return 0.5 * m * v * v
+    private let pi = Double.pi
+    
+    private var capacitiveReactance: Double? {
+        guard let f = Double(frequency), let c = Double(capacitance),
+              f != 0, c != 0 else { return nil }
+        return 1 / (2 * pi * f * c)
     }
     
     private var resultString: String? {
-        guard let e = kineticEnergy else { return nil }
-        return "KE = \(String(format: "%.4g", e)) J"
+        guard let xc = capacitiveReactance else { return nil }
+        return "Xc = \(String(format: "%.4g", xc)) Ω"
     }
     
     private var steps: [String] {
-        guard let _ = kineticEnergy, let m = Double(mass), let v = Double(velocity) else { return [] }
+        guard let _ = capacitiveReactance, let f = Double(frequency), let c = Double(capacitance) else { return [] }
         return [
-            "Given: m = \(m) kg, v = \(v) m/s",
-            "KE = ½mv²",
-            "KE = ½ × \(m) × \(v)²"
+            "Given: f = \(f) Hz, C = \(c) F",
+            "Xc = 1 / (2πfC)",
+            "Xc = 1 / (2 × π × \(f) × \(c))"
         ]
     }
     
-    private var canCalculate: Bool { kineticEnergy != nil }
+    private var canCalculate: Bool { capacitiveReactance != nil }
     
     var body: some View {
         ScrollView {
             VStack(spacing: 20) {
                 FormulaHelperView(
-                    formula: "KE = ½mv²",
-                    variables: ["KE = Kinetic Energy (J)", "m = Mass (kg)", "v = Velocity (m/s)"]
+                    formula: "Xc = 1 / (2πfC)",
+                    variables: ["Xc = Capacitive reactance (Ω)", "f = Frequency (Hz)", "C = Capacitance (F)"]
                 )
                 
                 Form {
                     Section("Input Values") {
-                        TextField("Mass (kg)", text: $mass)
+                        TextField("Frequency (Hz)", text: $frequency)
                             .keyboardType(.decimalPad)
-                            .validatedDecimalInput($mass)
-                        TextField("Velocity (m/s)", text: $velocity)
+                            .validatedDecimalInput($frequency)
+                        TextField("Capacitance (F)", text: $capacitance)
                             .keyboardType(.decimalPad)
-                            .validatedDecimalInput($velocity)
+                            .validatedDecimalInput($capacitance)
                     }
                     
                     Section {
                         Button {
                             hasCalculated = true
                             if let str = resultString {
-                                historyManager.add(formulaName: "Kinetic Energy", result: str)
+                                historyManager.add(formulaName: "Capacitive Reactance", result: str)
                             }
                         } label: {
                             Text("Calculate")
@@ -86,14 +89,14 @@ struct KineticEnergyView: View {
             .padding()
         }
         .numericKeyboardToolbar()
-        .navigationTitle("Kinetic Energy")
+        .navigationTitle("Capacitive Reactance")
         .toolbar {
             ToolbarItem(placement: .topBarTrailing) {
                 Button {
-                    favoritesManager.toggle("kinetic_energy")
+                    favoritesManager.toggle("capacitive_reactance")
                 } label: {
-                    Image(systemName: favoritesManager.isFavorite("kinetic_energy") ? "star.fill" : "star")
-                        .foregroundStyle(favoritesManager.isFavorite("kinetic_energy") ? .yellow : .secondary)
+                    Image(systemName: favoritesManager.isFavorite("capacitive_reactance") ? "star.fill" : "star")
+                        .foregroundStyle(favoritesManager.isFavorite("capacitive_reactance") ? .yellow : .secondary)
                 }
             }
         }
@@ -102,7 +105,7 @@ struct KineticEnergyView: View {
 
 #Preview {
     NavigationStack {
-        KineticEnergyView()
+        CapacitiveReactanceView()
             .environment(HistoryManager.shared)
             .environment(FavoritesManager.shared)
     }

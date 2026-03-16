@@ -1,63 +1,69 @@
 //
-//  KineticEnergyView.swift
+//  GravitationalForceView.swift
 //  Quantifyr
 //
-//  Created by Israel Manzo on 3/13/26.
+//  Created by Israel Manzo on 3/15/26.
 //
 
 import SwiftUI
 
-struct KineticEnergyView: View {
+struct GravitationalForceView: View {
     @Environment(HistoryManager.self) private var historyManager
     @Environment(FavoritesManager.self) private var favoritesManager
-    @State private var mass = ""
-    @State private var velocity = ""
+    @State private var mass1 = ""
+    @State private var mass2 = ""
+    @State private var distance = ""
     @State private var hasCalculated = false
     
-    private var kineticEnergy: Double? {
-        guard let m = Double(mass), let v = Double(velocity) else { return nil }
-        return 0.5 * m * v * v
+    private let G = 6.674e-11  // Gravitational constant (N⋅m²/kg²)
+    
+    private var gravitationalForce: Double? {
+        guard let m1 = Double(mass1), let m2 = Double(mass2), let r = Double(distance), r != 0 else { return nil }
+        return G * m1 * m2 / (r * r)
     }
     
     private var resultString: String? {
-        guard let e = kineticEnergy else { return nil }
-        return "KE = \(String(format: "%.4g", e)) J"
+        guard let f = gravitationalForce else { return nil }
+        return "F = \(String(format: "%.4g", f)) N"
     }
     
     private var steps: [String] {
-        guard let _ = kineticEnergy, let m = Double(mass), let v = Double(velocity) else { return [] }
+        guard let _ = gravitationalForce, let m1 = Double(mass1), let m2 = Double(mass2), let r = Double(distance) else { return [] }
         return [
-            "Given: m = \(m) kg, v = \(v) m/s",
-            "KE = ½mv²",
-            "KE = ½ × \(m) × \(v)²"
+            "Given: m₁ = \(m1) kg, m₂ = \(m2) kg, r = \(r) m",
+            "F = G(m₁m₂)/r²",
+            "F = 6.674×10⁻¹¹ × \(m1) × \(m2) / \(r)²"
         ]
     }
     
-    private var canCalculate: Bool { kineticEnergy != nil }
+    private var canCalculate: Bool { gravitationalForce != nil }
     
     var body: some View {
         ScrollView {
             VStack(spacing: 20) {
                 FormulaHelperView(
-                    formula: "KE = ½mv²",
-                    variables: ["KE = Kinetic Energy (J)", "m = Mass (kg)", "v = Velocity (m/s)"]
+                    formula: "F = G(m₁m₂)/r²",
+                    variables: ["F = Gravitational Force (N)", "G = 6.674×10⁻¹¹ N⋅m²/kg²", "m₁, m₂ = Masses (kg)", "r = Distance (m)"]
                 )
                 
                 Form {
                     Section("Input Values") {
-                        TextField("Mass (kg)", text: $mass)
+                        TextField("Mass 1 (kg)", text: $mass1)
                             .keyboardType(.decimalPad)
-                            .validatedDecimalInput($mass)
-                        TextField("Velocity (m/s)", text: $velocity)
+                            .validatedDecimalInput($mass1)
+                        TextField("Mass 2 (kg)", text: $mass2)
                             .keyboardType(.decimalPad)
-                            .validatedDecimalInput($velocity)
+                            .validatedDecimalInput($mass2)
+                        TextField("Distance (m)", text: $distance)
+                            .keyboardType(.decimalPad)
+                            .validatedDecimalInput($distance)
                     }
                     
                     Section {
                         Button {
                             hasCalculated = true
                             if let str = resultString {
-                                historyManager.add(formulaName: "Kinetic Energy", result: str)
+                                historyManager.add(formulaName: "Gravitational Force", result: str)
                             }
                         } label: {
                             Text("Calculate")
@@ -86,14 +92,14 @@ struct KineticEnergyView: View {
             .padding()
         }
         .numericKeyboardToolbar()
-        .navigationTitle("Kinetic Energy")
+        .navigationTitle("Gravitational Force")
         .toolbar {
             ToolbarItem(placement: .topBarTrailing) {
                 Button {
-                    favoritesManager.toggle("kinetic_energy")
+                    favoritesManager.toggle("gravitational_force")
                 } label: {
-                    Image(systemName: favoritesManager.isFavorite("kinetic_energy") ? "star.fill" : "star")
-                        .foregroundStyle(favoritesManager.isFavorite("kinetic_energy") ? .yellow : .secondary)
+                    Image(systemName: favoritesManager.isFavorite("gravitational_force") ? "star.fill" : "star")
+                        .foregroundStyle(favoritesManager.isFavorite("gravitational_force") ? .yellow : .secondary)
                 }
             }
         }
@@ -102,7 +108,7 @@ struct KineticEnergyView: View {
 
 #Preview {
     NavigationStack {
-        KineticEnergyView()
+        GravitationalForceView()
             .environment(HistoryManager.shared)
             .environment(FavoritesManager.shared)
     }

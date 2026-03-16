@@ -11,8 +11,9 @@ import SwiftUI
 struct HomeView: View {
     @Environment(HistoryManager.self) private var historyManager
     @Environment(FavoritesManager.self) private var favoritesManager
+    @Environment(SpotlightRouter.self) private var spotlightRouter
     @State private var searchText = ""
-    @State private var isSearchFocused = false
+    @State private var navigationPath = [String]()
     
     private var searchResults: [FormulaEntry] {
         FormulaRegistry.search(searchText)
@@ -23,7 +24,7 @@ struct HomeView: View {
     }
     
     var body: some View {
-        NavigationStack {
+        NavigationStack(path: $navigationPath) {
             ScrollView {
                 VStack(spacing: 24) {
                     // Search
@@ -60,6 +61,16 @@ struct HomeView: View {
             .searchable(text: $searchText, prompt: "Search formulas: voltage, force, frequency...")
             .navigationDestination(for: String.self) { formulaId in
                 FormulaRegistry.destination(for: formulaId)
+            }
+            .onAppear {
+                if let id = spotlightRouter.consumePendingNavigation() {
+                    navigationPath.append(id)
+                }
+            }
+            .onChange(of: spotlightRouter.formulaIdToOpen) { _, newId in
+                if let id = spotlightRouter.consumePendingNavigation() {
+                    navigationPath.append(id)
+                }
             }
         }
     }
@@ -188,7 +199,7 @@ struct HomeView: View {
                 
                 CategoryCardLink(
                     title: "Electrical",
-                    subtitle: "Ohm's Law, Power, Resistors, Capacitance",
+                    subtitle: "Ohm's Law, Power, Energy, Resistors, Capacitors, RC",
                     icon: "bolt.fill",
                     accent: AppTheme.Category.electrical,
                     destination: { ElectricalView() }
@@ -196,7 +207,7 @@ struct HomeView: View {
                 
                 CategoryCardLink(
                     title: "Physics",
-                    subtitle: "Force, Kinetic Energy, Momentum",
+                    subtitle: "Force, Energy, Velocity, Density, Pressure, Work",
                     icon: "atom",
                     accent: AppTheme.Category.physics,
                     destination: { PhysicsView() }
@@ -204,7 +215,7 @@ struct HomeView: View {
                 
                 CategoryCardLink(
                     title: "Frequency",
-                    subtitle: "Wavelength, RC filter",
+                    subtitle: "Wave speed, Frequency, Period, Reactance",
                     icon: "waveform",
                     accent: AppTheme.Category.frequency,
                     destination: { FrequencyView() }
@@ -212,10 +223,26 @@ struct HomeView: View {
                 
                 CategoryCardLink(
                     title: "Math",
-                    subtitle: "Metric prefixes: kilo, mega, giga, milli, micro, nano",
+                    subtitle: "Slope, Quadratic, Area, Volume, Pythagorean",
                     icon: "number",
                     accent: AppTheme.Category.math,
-                    destination: { MetricPrefixView() }
+                    destination: { MathView() }
+                )
+                
+                CategoryCardLink(
+                    title: "Graph Equations",
+                    subtitle: "Plot y = f(x): x², sin(x), 2x+1",
+                    icon: "chart.line.uptrend.xyaxis",
+                    accent: AppTheme.Category.math,
+                    destination: { GraphView() }
+                )
+                
+                CategoryCardLink(
+                    title: "Constants",
+                    subtitle: "π, c, G, h, ε₀, Avogadro, and more",
+                    icon: "square.stack.3d.up",
+                    accent: AppTheme.Category.physics,
+                    destination: { ConstantsView() }
                 )
             }
             
@@ -237,9 +264,15 @@ struct HomeView: View {
             
             VStack(spacing: 12) {
                 FeatureBadge(
-                    title: "Interactive Formulas",
-                    subtitle: "Visual display: V = I × R",
+                    title: "Formula Visualizer",
+                    subtitle: "Color-coded variables, tap to learn",
                     icon: "function"
+                )
+                
+                FeatureBadge(
+                    title: "Unit Intelligence",
+                    subtitle: "1000 m → suggests 1 km",
+                    icon: "lightbulb.fill"
                 )
                 
                 FeatureBadge(
@@ -266,10 +299,16 @@ struct HomeView: View {
                     icon: "clock.arrow.circlepath"
                 )
                 
-                FutureFeatureCard(
-                    title: "Graph Calculator",
-                    subtitle: "Plot equations (coming soon)",
+                FeatureBadge(
+                    title: "Graph Equations",
+                    subtitle: "Plot y = f(x) with Swift Charts",
                     icon: "chart.line.uptrend.xyaxis"
+                )
+                
+                FeatureBadge(
+                    title: "Spotlight Search",
+                    subtitle: "Search formulas from Home screen",
+                    icon: "magnifyingglass"
                 )
             }
         }
@@ -458,4 +497,5 @@ struct FeatureCard: View {
     HomeView()
         .environment(HistoryManager.shared)
         .environment(FavoritesManager.shared)
+        .environment(SpotlightRouter())
 }

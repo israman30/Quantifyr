@@ -1,46 +1,47 @@
 //
-//  KineticEnergyView.swift
+//  CentripetalForceView.swift
 //  Quantifyr
 //
-//  Created by Israel Manzo on 3/13/26.
+//  Created by Israel Manzo on 3/15/26.
 //
 
 import SwiftUI
 
-struct KineticEnergyView: View {
+struct CentripetalForceView: View {
     @Environment(HistoryManager.self) private var historyManager
     @Environment(FavoritesManager.self) private var favoritesManager
     @State private var mass = ""
     @State private var velocity = ""
+    @State private var radius = ""
     @State private var hasCalculated = false
     
-    private var kineticEnergy: Double? {
-        guard let m = Double(mass), let v = Double(velocity) else { return nil }
-        return 0.5 * m * v * v
+    private var centripetalForce: Double? {
+        guard let m = Double(mass), let v = Double(velocity), let r = Double(radius), r != 0 else { return nil }
+        return m * v * v / r
     }
     
     private var resultString: String? {
-        guard let e = kineticEnergy else { return nil }
-        return "KE = \(String(format: "%.4g", e)) J"
+        guard let f = centripetalForce else { return nil }
+        return "F = \(String(format: "%.4g", f)) N"
     }
     
     private var steps: [String] {
-        guard let _ = kineticEnergy, let m = Double(mass), let v = Double(velocity) else { return [] }
+        guard let _ = centripetalForce, let m = Double(mass), let v = Double(velocity), let r = Double(radius) else { return [] }
         return [
-            "Given: m = \(m) kg, v = \(v) m/s",
-            "KE = ½mv²",
-            "KE = ½ × \(m) × \(v)²"
+            "Given: m = \(m) kg, v = \(v) m/s, r = \(r) m",
+            "F = mv² / r",
+            "F = \(m) × \(v)² / \(r)"
         ]
     }
     
-    private var canCalculate: Bool { kineticEnergy != nil }
+    private var canCalculate: Bool { centripetalForce != nil }
     
     var body: some View {
         ScrollView {
             VStack(spacing: 20) {
                 FormulaHelperView(
-                    formula: "KE = ½mv²",
-                    variables: ["KE = Kinetic Energy (J)", "m = Mass (kg)", "v = Velocity (m/s)"]
+                    formula: "F = mv² / r",
+                    variables: ["F = Centripetal Force (N)", "m = Mass (kg)", "v = Velocity (m/s)", "r = Radius (m)"]
                 )
                 
                 Form {
@@ -51,13 +52,16 @@ struct KineticEnergyView: View {
                         TextField("Velocity (m/s)", text: $velocity)
                             .keyboardType(.decimalPad)
                             .validatedDecimalInput($velocity)
+                        TextField("Radius (m)", text: $radius)
+                            .keyboardType(.decimalPad)
+                            .validatedDecimalInput($radius)
                     }
                     
                     Section {
                         Button {
                             hasCalculated = true
                             if let str = resultString {
-                                historyManager.add(formulaName: "Kinetic Energy", result: str)
+                                historyManager.add(formulaName: "Centripetal Force", result: str)
                             }
                         } label: {
                             Text("Calculate")
@@ -86,14 +90,14 @@ struct KineticEnergyView: View {
             .padding()
         }
         .numericKeyboardToolbar()
-        .navigationTitle("Kinetic Energy")
+        .navigationTitle("Centripetal Force")
         .toolbar {
             ToolbarItem(placement: .topBarTrailing) {
                 Button {
-                    favoritesManager.toggle("kinetic_energy")
+                    favoritesManager.toggle("centripetal_force")
                 } label: {
-                    Image(systemName: favoritesManager.isFavorite("kinetic_energy") ? "star.fill" : "star")
-                        .foregroundStyle(favoritesManager.isFavorite("kinetic_energy") ? .yellow : .secondary)
+                    Image(systemName: favoritesManager.isFavorite("centripetal_force") ? "star.fill" : "star")
+                        .foregroundStyle(favoritesManager.isFavorite("centripetal_force") ? .yellow : .secondary)
                 }
             }
         }
@@ -102,7 +106,7 @@ struct KineticEnergyView: View {
 
 #Preview {
     NavigationStack {
-        KineticEnergyView()
+        CentripetalForceView()
             .environment(HistoryManager.shared)
             .environment(FavoritesManager.shared)
     }

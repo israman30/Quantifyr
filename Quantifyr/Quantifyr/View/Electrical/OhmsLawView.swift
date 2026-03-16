@@ -87,36 +87,8 @@ struct OhmsLawView: View {
     var body: some View {
         ScrollView {
             VStack(spacing: 24) {
-                // Visual Formula Section - large typography
-                VStack(spacing: 12) {
-                    Text("Ohm's Law")
-                        .font(.title2)
-                        .fontWeight(.semibold)
-                    
-                    Text("V = I × R")
-                        .font(.system(size: 36, weight: .bold))
-                        .fontDesign(.monospaced)
-                        .padding(.vertical, 16)
-                        .padding(.horizontal, 24)
-                        .frame(maxWidth: .infinity)
-                        .background(.ultraThinMaterial)
-                        .cornerRadius(12)
-                    
-                    HStack(spacing: 12) {
-                        Label("V = Voltage", systemImage: "bolt.fill")
-                            .font(.caption)
-                            .foregroundStyle(OhmsLawColor.voltage)
-                        Label("I = Current", systemImage: "arrow.right")
-                            .font(.caption)
-                            .foregroundStyle(OhmsLawColor.current)
-                        Label("R = Resistance", systemImage: "rectangle.3.group")
-                            .font(.caption)
-                            .foregroundStyle(OhmsLawColor.resistance)
-                    }
-                }
-                .padding()
-                .background(.regularMaterial)
-                .cornerRadius(16)
+                // Formula Visualizer - interactive, color-coded
+                FormulaVisualizerView.ohmsLaw()
                 
                 Form {
                     Section {

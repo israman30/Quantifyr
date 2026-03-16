@@ -1,63 +1,71 @@
 //
-//  KineticEnergyView.swift
+//  AverageView.swift
 //  Quantifyr
 //
-//  Created by Israel Manzo on 3/13/26.
+//  Created by Israel Manzo on 3/15/26.
 //
 
 import SwiftUI
 
-struct KineticEnergyView: View {
+struct AverageView: View {
     @Environment(HistoryManager.self) private var historyManager
     @Environment(FavoritesManager.self) private var favoritesManager
-    @State private var mass = ""
-    @State private var velocity = ""
+    @State private var valuesInput = ""
     @State private var hasCalculated = false
     
-    private var kineticEnergy: Double? {
-        guard let m = Double(mass), let v = Double(velocity) else { return nil }
-        return 0.5 * m * v * v
+    private var values: [Double] {
+        valuesInput
+            .split(separator: ",")
+            .compactMap { Double($0.trimmingCharacters(in: .whitespaces)) }
+    }
+    
+    private var average: Double? {
+        guard !values.isEmpty else { return nil }
+        return values.reduce(0, +) / Double(values.count)
     }
     
     private var resultString: String? {
-        guard let e = kineticEnergy else { return nil }
-        return "KE = \(String(format: "%.4g", e)) J"
+        guard let mean = average else { return nil }
+        return "mean = \(String(format: "%.4g", mean))"
     }
     
     private var steps: [String] {
-        guard let _ = kineticEnergy, let m = Double(mass), let v = Double(velocity) else { return [] }
+        guard let _ = average, !values.isEmpty else { return [] }
+        let sum = values.reduce(0, +)
+        let n = values.count
         return [
-            "Given: m = \(m) kg, v = \(v) m/s",
-            "KE = ½mv²",
-            "KE = ½ × \(m) × \(v)²"
+            "Given: n = \(n) values",
+            "Σx = \(sum)",
+            "mean = Σx / n = \(sum) / \(n)"
         ]
     }
     
-    private var canCalculate: Bool { kineticEnergy != nil }
+    private var canCalculate: Bool { average != nil }
     
     var body: some View {
         ScrollView {
             VStack(spacing: 20) {
                 FormulaHelperView(
-                    formula: "KE = ½mv²",
-                    variables: ["KE = Kinetic Energy (J)", "m = Mass (kg)", "v = Velocity (m/s)"]
+                    formula: "mean = Σx / n",
+                    variables: ["mean = Average", "Σx = Sum of values", "n = Count"]
                 )
                 
                 Form {
                     Section("Input Values") {
-                        TextField("Mass (kg)", text: $mass)
-                            .keyboardType(.decimalPad)
-                            .validatedDecimalInput($mass)
-                        TextField("Velocity (m/s)", text: $velocity)
-                            .keyboardType(.decimalPad)
-                            .validatedDecimalInput($velocity)
+                        TextField("Numbers (comma-separated)", text: $valuesInput)
+                            .keyboardType(.numbersAndPunctuation)
+                        if !values.isEmpty {
+                            Text("\(values.count) value(s) entered")
+                                .font(.caption)
+                                .foregroundStyle(.secondary)
+                        }
                     }
                     
                     Section {
                         Button {
                             hasCalculated = true
                             if let str = resultString {
-                                historyManager.add(formulaName: "Kinetic Energy", result: str)
+                                historyManager.add(formulaName: "Average", result: str)
                             }
                         } label: {
                             Text("Calculate")
@@ -72,12 +80,8 @@ struct KineticEnergyView: View {
                         Section("Result") {
                             ResultWithActionsView(result: resultString, fullText: (steps + [resultString]).joined(separator: "\n"))
                         }
-                        
                         Section {
-                            StepByStepView(
-                                steps: steps,
-                                result: resultString
-                            )
+                            StepByStepView(steps: steps, result: resultString)
                         }
                     }
                 }
@@ -86,14 +90,14 @@ struct KineticEnergyView: View {
             .padding()
         }
         .numericKeyboardToolbar()
-        .navigationTitle("Kinetic Energy")
+        .navigationTitle("Average")
         .toolbar {
             ToolbarItem(placement: .topBarTrailing) {
                 Button {
-                    favoritesManager.toggle("kinetic_energy")
+                    favoritesManager.toggle("average")
                 } label: {
-                    Image(systemName: favoritesManager.isFavorite("kinetic_energy") ? "star.fill" : "star")
-                        .foregroundStyle(favoritesManager.isFavorite("kinetic_energy") ? .yellow : .secondary)
+                    Image(systemName: favoritesManager.isFavorite("average") ? "star.fill" : "star")
+                        .foregroundStyle(favoritesManager.isFavorite("average") ? .yellow : .secondary)
                 }
             }
         }
@@ -102,7 +106,7 @@ struct KineticEnergyView: View {
 
 #Preview {
     NavigationStack {
-        KineticEnergyView()
+        AverageView()
             .environment(HistoryManager.shared)
             .environment(FavoritesManager.shared)
     }
