@@ -10,7 +10,7 @@ import SwiftUI
 struct ElectricalView: View {
     var body: some View {
         List {
-            ForEach(FormulaLibrary.electrical) { item in
+            ForEach(FormulaLibrary.electrical, id: \.name) { item in
                 NavigationLink {
                     FormulaRegistry.destination(for: item.id)
                 }                 label: {

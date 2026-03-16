@@ -10,7 +10,7 @@ import SwiftUI
 struct FrequencyView: View {
     var body: some View {
         List {
-            ForEach(FormulaLibrary.frequency) { item in
+            ForEach(FormulaLibrary.frequency, id: \.name) { item in
                 NavigationLink {
                     FormulaRegistry.destination(for: item.id)
                 } label: {
