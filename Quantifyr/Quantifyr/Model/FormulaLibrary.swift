@@ -41,11 +41,20 @@ struct FormulaLibrary {
         FormulaLibraryItem(id: "rc_filter", name: "RC Time Constant", formula: "τ = R × C", icon: "waveform.circle")
     ]
     
+    /// Physics formulas — organized for students
     static let physics: [FormulaLibraryItem] = [
         FormulaLibraryItem(id: "force", name: "Force", formula: "F = m × a", icon: "arrow.up.and.down.and.arrow.left.and.right"),
-        FormulaLibraryItem(id: "momentum", name: "Momentum", formula: "p = mv", icon: "arrow.forward"),
-        FormulaLibraryItem(id: "kinetic_energy", name: "Energy", formula: "E = ½mv²", icon: "bolt.fill"),
-        FormulaLibraryItem(id: "velocity", name: "Velocity", formula: "v = d / t", icon: "speedometer")
+        FormulaLibraryItem(id: "momentum", name: "Momentum", formula: "p = m × v", icon: "arrow.forward"),
+        FormulaLibraryItem(id: "kinetic_energy", name: "Kinetic Energy", formula: "KE = ½mv²", icon: "bolt.fill"),
+        FormulaLibraryItem(id: "potential_energy", name: "Potential Energy", formula: "PE = mgh", icon: "arrow.down.to.line"),
+        FormulaLibraryItem(id: "velocity", name: "Velocity", formula: "v = d / t", icon: "speedometer"),
+        FormulaLibraryItem(id: "acceleration", name: "Acceleration", formula: "a = Δv / t", icon: "arrow.up.forward"),
+        FormulaLibraryItem(id: "density", name: "Density", formula: "ρ = m / V", icon: "drop.fill"),
+        FormulaLibraryItem(id: "pressure", name: "Pressure", formula: "P = F / A", icon: "square.on.square"),
+        FormulaLibraryItem(id: "work", name: "Work", formula: "W = F × d", icon: "wrench.and.screwdriver"),
+        FormulaLibraryItem(id: "physics_power", name: "Power", formula: "P = W / t", icon: "gauge.with.dots.needle.67percent"),
+        FormulaLibraryItem(id: "centripetal_force", name: "Centripetal Force", formula: "F = mv² / r", icon: "arrow.triangle.2.circlepath"),
+        FormulaLibraryItem(id: "gravitational_force", name: "Gravitational Force", formula: "F = G(m₁m₂)/r²", icon: "globe.americas.fill")
     ]
     
     static let frequency: [FormulaLibraryItem] = [

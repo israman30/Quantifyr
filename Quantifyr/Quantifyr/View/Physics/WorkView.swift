@@ -1,63 +1,63 @@
 //
-//  KineticEnergyView.swift
+//  WorkView.swift
 //  Quantifyr
 //
-//  Created by Israel Manzo on 3/13/26.
+//  Created by Israel Manzo on 3/15/26.
 //
 
 import SwiftUI
 
-struct KineticEnergyView: View {
+struct WorkView: View {
     @Environment(HistoryManager.self) private var historyManager
     @Environment(FavoritesManager.self) private var favoritesManager
-    @State private var mass = ""
-    @State private var velocity = ""
+    @State private var force = ""
+    @State private var distance = ""
     @State private var hasCalculated = false
     
-    private var kineticEnergy: Double? {
-        guard let m = Double(mass), let v = Double(velocity) else { return nil }
-        return 0.5 * m * v * v
+    private var work: Double? {
+        guard let f = Double(force), let d = Double(distance) else { return nil }
+        return f * d
     }
     
     private var resultString: String? {
-        guard let e = kineticEnergy else { return nil }
-        return "KE = \(String(format: "%.4g", e)) J"
+        guard let w = work else { return nil }
+        return "W = \(String(format: "%.4g", w)) J"
     }
     
     private var steps: [String] {
-        guard let _ = kineticEnergy, let m = Double(mass), let v = Double(velocity) else { return [] }
+        guard let _ = work, let f = Double(force), let d = Double(distance) else { return [] }
         return [
-            "Given: m = \(m) kg, v = \(v) m/s",
-            "KE = ½mv²",
-            "KE = ½ × \(m) × \(v)²"
+            "Given: F = \(f) N, d = \(d) m",
+            "W = F × d",
+            "W = \(f) × \(d)"
         ]
     }
     
-    private var canCalculate: Bool { kineticEnergy != nil }
+    private var canCalculate: Bool { work != nil }
     
     var body: some View {
         ScrollView {
             VStack(spacing: 20) {
                 FormulaHelperView(
-                    formula: "KE = ½mv²",
-                    variables: ["KE = Kinetic Energy (J)", "m = Mass (kg)", "v = Velocity (m/s)"]
+                    formula: "W = F × d",
+                    variables: ["W = Work (J)", "F = Force (N)", "d = Distance (m)"]
                 )
                 
                 Form {
                     Section("Input Values") {
-                        TextField("Mass (kg)", text: $mass)
+                        TextField("Force (N)", text: $force)
                             .keyboardType(.decimalPad)
-                            .validatedDecimalInput($mass)
-                        TextField("Velocity (m/s)", text: $velocity)
+                            .validatedDecimalInput($force)
+                        TextField("Distance (m)", text: $distance)
                             .keyboardType(.decimalPad)
-                            .validatedDecimalInput($velocity)
+                            .validatedDecimalInput($distance)
                     }
                     
                     Section {
                         Button {
                             hasCalculated = true
                             if let str = resultString {
-                                historyManager.add(formulaName: "Kinetic Energy", result: str)
+                                historyManager.add(formulaName: "Work", result: str)
                             }
                         } label: {
                             Text("Calculate")
@@ -86,14 +86,14 @@ struct KineticEnergyView: View {
             .padding()
         }
         .numericKeyboardToolbar()
-        .navigationTitle("Kinetic Energy")
+        .navigationTitle("Work")
         .toolbar {
             ToolbarItem(placement: .topBarTrailing) {
                 Button {
-                    favoritesManager.toggle("kinetic_energy")
+                    favoritesManager.toggle("work")
                 } label: {
-                    Image(systemName: favoritesManager.isFavorite("kinetic_energy") ? "star.fill" : "star")
-                        .foregroundStyle(favoritesManager.isFavorite("kinetic_energy") ? .yellow : .secondary)
+                    Image(systemName: favoritesManager.isFavorite("work") ? "star.fill" : "star")
+                        .foregroundStyle(favoritesManager.isFavorite("work") ? .yellow : .secondary)
                 }
             }
         }
@@ -102,7 +102,7 @@ struct KineticEnergyView: View {
 
 #Preview {
     NavigationStack {
-        KineticEnergyView()
+        WorkView()
             .environment(HistoryManager.shared)
             .environment(FavoritesManager.shared)
     }

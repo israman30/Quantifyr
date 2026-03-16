@@ -1,63 +1,63 @@
 //
-//  KineticEnergyView.swift
+//  AccelerationView.swift
 //  Quantifyr
 //
-//  Created by Israel Manzo on 3/13/26.
+//  Created by Israel Manzo on 3/15/26.
 //
 
 import SwiftUI
 
-struct KineticEnergyView: View {
+struct AccelerationView: View {
     @Environment(HistoryManager.self) private var historyManager
     @Environment(FavoritesManager.self) private var favoritesManager
-    @State private var mass = ""
-    @State private var velocity = ""
+    @State private var deltaVelocity = ""
+    @State private var time = ""
     @State private var hasCalculated = false
     
-    private var kineticEnergy: Double? {
-        guard let m = Double(mass), let v = Double(velocity) else { return nil }
-        return 0.5 * m * v * v
+    private var acceleration: Double? {
+        guard let dv = Double(deltaVelocity), let t = Double(time), t != 0 else { return nil }
+        return dv / t
     }
     
     private var resultString: String? {
-        guard let e = kineticEnergy else { return nil }
-        return "KE = \(String(format: "%.4g", e)) J"
+        guard let a = acceleration else { return nil }
+        return "a = \(String(format: "%.4g", a)) m/s²"
     }
     
     private var steps: [String] {
-        guard let _ = kineticEnergy, let m = Double(mass), let v = Double(velocity) else { return [] }
+        guard let _ = acceleration, let dv = Double(deltaVelocity), let t = Double(time) else { return [] }
         return [
-            "Given: m = \(m) kg, v = \(v) m/s",
-            "KE = ½mv²",
-            "KE = ½ × \(m) × \(v)²"
+            "Given: Δv = \(dv) m/s, t = \(t) s",
+            "a = Δv / t",
+            "a = \(dv) / \(t)"
         ]
     }
     
-    private var canCalculate: Bool { kineticEnergy != nil }
+    private var canCalculate: Bool { acceleration != nil }
     
     var body: some View {
         ScrollView {
             VStack(spacing: 20) {
                 FormulaHelperView(
-                    formula: "KE = ½mv²",
-                    variables: ["KE = Kinetic Energy (J)", "m = Mass (kg)", "v = Velocity (m/s)"]
+                    formula: "a = Δv / t",
+                    variables: ["a = Acceleration (m/s²)", "Δv = Change in velocity (m/s)", "t = Time (s)"]
                 )
                 
                 Form {
                     Section("Input Values") {
-                        TextField("Mass (kg)", text: $mass)
+                        TextField("Change in velocity Δv (m/s)", text: $deltaVelocity)
                             .keyboardType(.decimalPad)
-                            .validatedDecimalInput($mass)
-                        TextField("Velocity (m/s)", text: $velocity)
+                            .validatedDecimalInput($deltaVelocity)
+                        TextField("Time (s)", text: $time)
                             .keyboardType(.decimalPad)
-                            .validatedDecimalInput($velocity)
+                            .validatedDecimalInput($time)
                     }
                     
                     Section {
                         Button {
                             hasCalculated = true
                             if let str = resultString {
-                                historyManager.add(formulaName: "Kinetic Energy", result: str)
+                                historyManager.add(formulaName: "Acceleration", result: str)
                             }
                         } label: {
                             Text("Calculate")
@@ -86,14 +86,14 @@ struct KineticEnergyView: View {
             .padding()
         }
         .numericKeyboardToolbar()
-        .navigationTitle("Kinetic Energy")
+        .navigationTitle("Acceleration")
         .toolbar {
             ToolbarItem(placement: .topBarTrailing) {
                 Button {
-                    favoritesManager.toggle("kinetic_energy")
+                    favoritesManager.toggle("acceleration")
                 } label: {
-                    Image(systemName: favoritesManager.isFavorite("kinetic_energy") ? "star.fill" : "star")
-                        .foregroundStyle(favoritesManager.isFavorite("kinetic_energy") ? .yellow : .secondary)
+                    Image(systemName: favoritesManager.isFavorite("acceleration") ? "star.fill" : "star")
+                        .foregroundStyle(favoritesManager.isFavorite("acceleration") ? .yellow : .secondary)
                 }
             }
         }
@@ -102,7 +102,7 @@ struct KineticEnergyView: View {
 
 #Preview {
     NavigationStack {
-        KineticEnergyView()
+        AccelerationView()
             .environment(HistoryManager.shared)
             .environment(FavoritesManager.shared)
     }

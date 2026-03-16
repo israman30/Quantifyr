@@ -42,10 +42,19 @@ enum FormulaRegistry {
         FormulaEntry(id: "capacitance", name: "Capacitor Energy", formula: "E = ½ C V²", category: "Electrical", keywords: ["capacitor", "energy", "capacitance", "voltage"]),
         FormulaEntry(id: "capacitance", name: "Capacitor Charge", formula: "Q = C × V", category: "Electrical", keywords: ["capacitance", "capacitor", "charge", "coulomb"]),
         FormulaEntry(id: "rc_filter", name: "RC Time Constant", formula: "τ = R × C", category: "Electrical", keywords: ["rc", "time constant", "tau", "capacitor", "resistor"]),
+        // Physics
         FormulaEntry(id: "force", name: "Force", formula: "F = m × a", category: "Physics", keywords: ["force", "mass", "acceleration", "newton"]),
-        FormulaEntry(id: "kinetic_energy", name: "Kinetic Energy", formula: "E = ½mv²", category: "Physics", keywords: ["kinetic", "energy", "mass", "velocity"]),
-        FormulaEntry(id: "momentum", name: "Momentum", formula: "p = mv", category: "Physics", keywords: ["momentum", "mass", "velocity"]),
+        FormulaEntry(id: "momentum", name: "Momentum", formula: "p = m × v", category: "Physics", keywords: ["momentum", "mass", "velocity"]),
+        FormulaEntry(id: "kinetic_energy", name: "Kinetic Energy", formula: "KE = ½mv²", category: "Physics", keywords: ["kinetic", "energy", "mass", "velocity"]),
+        FormulaEntry(id: "potential_energy", name: "Potential Energy", formula: "PE = mgh", category: "Physics", keywords: ["potential", "energy", "mass", "gravity", "height"]),
         FormulaEntry(id: "velocity", name: "Velocity", formula: "v = d / t", category: "Physics", keywords: ["velocity", "distance", "time", "speed"]),
+        FormulaEntry(id: "acceleration", name: "Acceleration", formula: "a = Δv / t", category: "Physics", keywords: ["acceleration", "velocity", "time", "delta"]),
+        FormulaEntry(id: "density", name: "Density", formula: "ρ = m / V", category: "Physics", keywords: ["density", "mass", "volume", "rho"]),
+        FormulaEntry(id: "pressure", name: "Pressure", formula: "P = F / A", category: "Physics", keywords: ["pressure", "force", "area", "pascal"]),
+        FormulaEntry(id: "work", name: "Work", formula: "W = F × d", category: "Physics", keywords: ["work", "force", "distance", "joule"]),
+        FormulaEntry(id: "physics_power", name: "Power", formula: "P = W / t", category: "Physics", keywords: ["power", "work", "time", "watt"]),
+        FormulaEntry(id: "centripetal_force", name: "Centripetal Force", formula: "F = mv² / r", category: "Physics", keywords: ["centripetal", "force", "circular", "radius"]),
+        FormulaEntry(id: "gravitational_force", name: "Gravitational Force", formula: "F = G(m₁m₂)/r²", category: "Physics", keywords: ["gravity", "gravitational", "force", "newton", "mass"]),
         FormulaEntry(id: "wavelength", name: "Wavelength", formula: "λ = v / f", category: "Frequency", keywords: ["wavelength", "frequency", "velocity", "wave"]),
         FormulaEntry(id: "rc_filter", name: "RC Filter", formula: "f = 1 / (2πRC)", category: "Frequency", keywords: ["rc", "filter", "frequency", "cutoff"]),
         FormulaEntry(id: "metric_prefix", name: "Metric Prefix", formula: "kilo, mega, giga, milli, micro", category: "Math", keywords: ["metric", "prefix", "kilo", "mega", "giga", "milli", "micro", "nano"]),
@@ -78,7 +87,15 @@ enum FormulaRegistry {
         case "force": ForceView()
         case "kinetic_energy": KineticEnergyView()
         case "momentum": MomentumView()
+        case "potential_energy": PotentialEnergyView()
         case "velocity": VelocityView()
+        case "acceleration": AccelerationView()
+        case "density": DensityView()
+        case "pressure": PressureView()
+        case "work": WorkView()
+        case "physics_power": PhysicsPowerView()
+        case "centripetal_force": CentripetalForceView()
+        case "gravitational_force": GravitationalForceView()
         case "wavelength": WavelengthView()
         case "rc_filter": RCFilterView()
         case "metric_prefix": MetricPrefixView()

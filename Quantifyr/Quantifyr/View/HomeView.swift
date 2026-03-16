@@ -207,7 +207,7 @@ struct HomeView: View {
                 
                 CategoryCardLink(
                     title: "Physics",
-                    subtitle: "Force, Kinetic Energy, Momentum",
+                    subtitle: "Force, Energy, Velocity, Density, Pressure, Work",
                     icon: "atom",
                     accent: AppTheme.Category.physics,
                     destination: { PhysicsView() }

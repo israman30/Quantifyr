@@ -30,8 +30,8 @@ struct PhysicsView: View {
                     }
                 }
             }
-            .navigationTitle("Physics")
         }
+        .navigationTitle("Physics")
     }
 }
 
@@ -41,5 +41,6 @@ struct PhysicsView: View {
         PhysicsView()
             .environment(HistoryManager.shared)
             .environment(FavoritesManager.shared)
+            .environment(SpotlightRouter())
     }
 }

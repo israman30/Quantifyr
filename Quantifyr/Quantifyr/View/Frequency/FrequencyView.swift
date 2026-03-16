@@ -41,5 +41,6 @@ struct FrequencyView: View {
         FrequencyView()
             .environment(HistoryManager.shared)
             .environment(FavoritesManager.shared)
+            .environment(SpotlightRouter())
     }
 }

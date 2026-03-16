@@ -40,5 +40,6 @@ struct ElectricalView: View {
         ElectricalView()
             .environment(HistoryManager.shared)
             .environment(FavoritesManager.shared)
+            .environment(SpotlightRouter())
     }
 }
