@@ -1,16 +1,16 @@
 //
-//  FrequencyView.swift
+//  MathView.swift
 //  Quantifyr
 //
-//  Created by Israel Manzo on 3/13/26.
+//  Created by Israel Manzo on 3/15/26.
 //
 
 import SwiftUI
 
-struct FrequencyView: View {
+struct MathView: View {
     var body: some View {
         List {
-            ForEach(FormulaLibrary.frequency) { item in
+            ForEach(FormulaLibrary.math) { item in
                 NavigationLink {
                     FormulaRegistry.destination(for: item.id)
                 } label: {
@@ -31,14 +31,13 @@ struct FrequencyView: View {
                 }
             }
         }
-        .navigationTitle("Frequency & Signal")
+        .navigationTitle("Mathematics")
     }
 }
 
-
 #Preview {
     NavigationStack {
-        FrequencyView()
+        MathView()
             .environment(HistoryManager.shared)
             .environment(FavoritesManager.shared)
             .environment(SpotlightRouter())

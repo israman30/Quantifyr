@@ -57,12 +57,29 @@ struct FormulaLibrary {
         FormulaLibraryItem(id: "gravitational_force", name: "Gravitational Force", formula: "F = G(m₁m₂)/r²", icon: "globe.americas.fill")
     ]
     
+    /// Wave & Frequency formulas — organized for students
     static let frequency: [FormulaLibraryItem] = [
+        FormulaLibraryItem(id: "wave_speed", name: "Wave Speed", formula: "v = fλ", icon: "waveform.path"),
+        FormulaLibraryItem(id: "frequency_period", name: "Frequency", formula: "f = 1 / T", icon: "waveform"),
+        FormulaLibraryItem(id: "frequency_period", name: "Period", formula: "T = 1 / f", icon: "clock"),
+        FormulaLibraryItem(id: "angular_frequency", name: "Angular Frequency", formula: "ω = 2πf", icon: "arrow.triangle.2.circlepath"),
         FormulaLibraryItem(id: "wavelength", name: "Wavelength", formula: "λ = v / f", icon: "waveform.path"),
-        FormulaLibraryItem(id: "rc_filter", name: "RC Filter", formula: "f = 1 / (2πRC)", icon: "waveform.circle")
+        FormulaLibraryItem(id: "rc_filter", name: "RC Filter Frequency", formula: "f = 1 / (2πRC)", icon: "waveform.circle"),
+        FormulaLibraryItem(id: "inductive_reactance", name: "Inductive Reactance", formula: "Xₗ = 2πfL", icon: "rectangle.3.group"),
+        FormulaLibraryItem(id: "capacitive_reactance", name: "Capacitive Reactance", formula: "Xc = 1 / (2πfC)", icon: "selection.pin.in.out")
     ]
     
+    /// Mathematics formulas — organized for students
     static let math: [FormulaLibraryItem] = [
+        FormulaLibraryItem(id: "slope", name: "Slope", formula: "m = (y₂ - y₁)/(x₂ - x₁)", icon: "line.diagonal"),
+        FormulaLibraryItem(id: "quadratic_formula", name: "Quadratic Formula", formula: "x = (-b ± √(b²-4ac)) / 2a", icon: "x.squareroot"),
+        FormulaLibraryItem(id: "area_circle", name: "Area Circle", formula: "A = πr²", icon: "circle.fill"),
+        FormulaLibraryItem(id: "circumference", name: "Circumference", formula: "C = 2πr", icon: "circle"),
+        FormulaLibraryItem(id: "area_triangle", name: "Area Triangle", formula: "A = ½bh", icon: "triangle.fill"),
+        FormulaLibraryItem(id: "pythagorean", name: "Pythagorean", formula: "a² + b² = c²", icon: "square"),
+        FormulaLibraryItem(id: "volume_sphere", name: "Volume Sphere", formula: "V = 4/3 πr³", icon: "circle.circle"),
+        FormulaLibraryItem(id: "volume_cylinder", name: "Volume Cylinder", formula: "V = πr²h", icon: "cylinder.fill"),
+        FormulaLibraryItem(id: "average", name: "Average", formula: "mean = Σx / n", icon: "number"),
         FormulaLibraryItem(id: "metric_prefix", name: "Metric Prefix", formula: "kilo, mega, giga, milli, micro", icon: "number")
     ]
     

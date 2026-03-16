@@ -215,7 +215,7 @@ struct HomeView: View {
                 
                 CategoryCardLink(
                     title: "Frequency",
-                    subtitle: "Wavelength, RC filter",
+                    subtitle: "Wave speed, Frequency, Period, Reactance",
                     icon: "waveform",
                     accent: AppTheme.Category.frequency,
                     destination: { FrequencyView() }
@@ -223,10 +223,10 @@ struct HomeView: View {
                 
                 CategoryCardLink(
                     title: "Math",
-                    subtitle: "Metric prefixes: kilo, mega, giga, milli, micro, nano",
+                    subtitle: "Slope, Quadratic, Area, Volume, Pythagorean",
                     icon: "number",
                     accent: AppTheme.Category.math,
-                    destination: { MetricPrefixView() }
+                    destination: { MathView() }
                 )
                 
                 CategoryCardLink(
