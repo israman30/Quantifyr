@@ -29,10 +29,19 @@ struct FormulaEntry: Identifiable {
 enum FormulaRegistry {
     static let all: [FormulaEntry] = [
         FormulaEntry(id: "unit_converter", name: "Unit Converter", formula: "Length, weight, temp, speed, energy", category: "Unit Converter", keywords: ["convert", "length", "weight", "temperature", "speed", "energy", "units"]),
+        // Electrical Engineering
         FormulaEntry(id: "ohms_law", name: "Ohm's Law", formula: "V = I × R", category: "Electrical", keywords: ["voltage", "current", "resistance", "ohm"]),
-        FormulaEntry(id: "power", name: "Power", formula: "P = V × I", category: "Electrical", keywords: ["power", "voltage", "current", "watt"]),
-        FormulaEntry(id: "resistor", name: "Resistor Calculator", formula: "Series/Parallel", category: "Electrical", keywords: ["resistor", "series", "parallel"]),
-        FormulaEntry(id: "capacitance", name: "Capacitance", formula: "Q = CV", category: "Electrical", keywords: ["capacitance", "capacitor", "charge"]),
+        FormulaEntry(id: "ohms_law", name: "Current", formula: "I = V / R", category: "Electrical", keywords: ["current", "voltage", "resistance", "ampere"]),
+        FormulaEntry(id: "ohms_law", name: "Resistance", formula: "R = V / I", category: "Electrical", keywords: ["resistance", "voltage", "current", "ohm"]),
+        FormulaEntry(id: "power", name: "Electrical Power", formula: "P = V × I", category: "Electrical", keywords: ["power", "voltage", "current", "watt"]),
+        FormulaEntry(id: "power", name: "Power (Current form)", formula: "P = I²R", category: "Electrical", keywords: ["power", "current", "resistance"]),
+        FormulaEntry(id: "power", name: "Power (Voltage form)", formula: "P = V² / R", category: "Electrical", keywords: ["power", "voltage", "resistance"]),
+        FormulaEntry(id: "power", name: "Energy", formula: "E = P × t", category: "Electrical", keywords: ["energy", "power", "time", "joule"]),
+        FormulaEntry(id: "resistor", name: "Series Resistance", formula: "R_total = R₁ + R₂ + ...", category: "Electrical", keywords: ["resistor", "series"]),
+        FormulaEntry(id: "resistor", name: "Parallel Resistance", formula: "1/R = 1/R₁ + 1/R₂", category: "Electrical", keywords: ["resistor", "parallel"]),
+        FormulaEntry(id: "capacitance", name: "Capacitor Energy", formula: "E = ½ C V²", category: "Electrical", keywords: ["capacitor", "energy", "capacitance", "voltage"]),
+        FormulaEntry(id: "capacitance", name: "Capacitor Charge", formula: "Q = C × V", category: "Electrical", keywords: ["capacitance", "capacitor", "charge", "coulomb"]),
+        FormulaEntry(id: "rc_filter", name: "RC Time Constant", formula: "τ = R × C", category: "Electrical", keywords: ["rc", "time constant", "tau", "capacitor", "resistor"]),
         FormulaEntry(id: "force", name: "Force", formula: "F = m × a", category: "Physics", keywords: ["force", "mass", "acceleration", "newton"]),
         FormulaEntry(id: "kinetic_energy", name: "Kinetic Energy", formula: "E = ½mv²", category: "Physics", keywords: ["kinetic", "energy", "mass", "velocity"]),
         FormulaEntry(id: "momentum", name: "Momentum", formula: "p = mv", category: "Physics", keywords: ["momentum", "mass", "velocity"]),

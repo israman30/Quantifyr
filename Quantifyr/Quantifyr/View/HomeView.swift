@@ -199,7 +199,7 @@ struct HomeView: View {
                 
                 CategoryCardLink(
                     title: "Electrical",
-                    subtitle: "Ohm's Law, Power, Resistors, Capacitance",
+                    subtitle: "Ohm's Law, Power, Energy, Resistors, Capacitors, RC",
                     icon: "bolt.fill",
                     accent: AppTheme.Category.electrical,
                     destination: { ElectricalView() }

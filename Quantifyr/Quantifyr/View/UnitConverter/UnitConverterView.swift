@@ -46,8 +46,7 @@ struct UnitConverterView: View {
     private var toUnits: [String] { fromUnits }
     
     var body: some View {
-        NavigationStack {
-            Form {
+        Form {
                 Section("Category") {
                     Picker("Category", selection: $selectedCategory) {
                         ForEach(ConversionCategory.allCases, id: \.self) { cat in
@@ -125,7 +124,6 @@ struct UnitConverterView: View {
             }
             .numericKeyboardToolbar()
             .navigationTitle("Unit Converter")
-        }
     }
     
     private func formatSuggestion(_ v: Double) -> String {
@@ -231,7 +229,9 @@ struct UnitConverterView: View {
 }
 
 #Preview {
-    UnitConverterView()
-        .environment(HistoryManager.shared)
-        .environment(FavoritesManager.shared)
+    NavigationStack {
+        UnitConverterView()
+            .environment(HistoryManager.shared)
+            .environment(FavoritesManager.shared)
+    }
 }

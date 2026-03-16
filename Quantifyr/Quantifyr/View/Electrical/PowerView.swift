@@ -11,6 +11,7 @@ enum PowerFormula: String, CaseIterable {
     case pVI = "P = V × I"
     case pI2R = "P = I²R"
     case pV2R = "P = V² / R"
+    case energy = "E = P × t"
 }
 
 struct PowerView: View {
@@ -20,6 +21,8 @@ struct PowerView: View {
     @State private var voltage = ""
     @State private var current = ""
     @State private var resistance = ""
+    @State private var powerInput = ""
+    @State private var time = ""
     @State private var hasCalculated = false
     
     private var power: Double? {
@@ -33,6 +36,9 @@ struct PowerView: View {
         case .pV2R:
             guard let v = Double(voltage), let r = Double(resistance), r != 0 else { return nil }
             return (v * v) / r
+        case .energy:
+            guard let p = Double(powerInput), let t = Double(time), p >= 0, t >= 0 else { return nil }
+            return p * t
         }
     }
     
@@ -60,7 +66,30 @@ struct PowerView: View {
                 "P = V² / R",
                 "P = \(v)² / \(r)"
             ]
+        case .energy:
+            guard let p = Double(powerInput), let t = Double(time) else { return [] }
+            return [
+                "Given: P = \(p) W, t = \(t) s",
+                "E = P × t",
+                "E = \(p) × \(t)"
+            ]
         }
+    }
+    
+    private var formulaVariables: [FormulaVariable] {
+        if formula == .energy {
+            return [
+                FormulaVariable(id: "e", symbol: "E", name: "Energy", unit: "Joules (J)", color: AppTheme.Category.electrical, icon: "bolt.circle"),
+                FormulaVariable(id: "p", symbol: "P", name: "Power", unit: "Watts (W)", color: .blue, icon: "gauge.with.dots.needle.67percent"),
+                FormulaVariable(id: "t", symbol: "t", name: "Time", unit: "Seconds (s)", color: .green, icon: "clock")
+            ]
+        }
+        return [
+            FormulaVariable(id: "p", symbol: "P", name: "Power", unit: "Watts (W)", color: AppTheme.Category.electrical, icon: "gauge.with.dots.needle.67percent"),
+            FormulaVariable(id: "v", symbol: "V", name: "Voltage", unit: "Volts (V)", color: .blue, icon: "bolt.fill"),
+            FormulaVariable(id: "i", symbol: "I", name: "Current", unit: "Amps (A)", color: .green, icon: "arrow.right"),
+            FormulaVariable(id: "r", symbol: "R", name: "Resistance", unit: "Ohms (Ω)", color: .orange, icon: "rectangle.3.group")
+        ]
     }
     
     var body: some View {
@@ -68,13 +97,8 @@ struct PowerView: View {
             VStack(spacing: 20) {
                 FormulaVisualizerView(
                     formula: formula.rawValue,
-                    variables: [
-                        FormulaVariable(id: "p", symbol: "P", name: "Power", unit: "Watts (W)", color: AppTheme.Category.electrical, icon: "gauge.with.dots.needle.67percent"),
-                        FormulaVariable(id: "v", symbol: "V", name: "Voltage", unit: "Volts (V)", color: .blue, icon: "bolt.fill"),
-                        FormulaVariable(id: "i", symbol: "I", name: "Current", unit: "Amps (A)", color: .green, icon: "arrow.right"),
-                        FormulaVariable(id: "r", symbol: "R", name: "Resistance", unit: "Ohms (Ω)", color: .orange, icon: "rectangle.3.group")
-                    ],
-                    title: "Power Law"
+                    variables: formulaVariables,
+                    title: formula == .energy ? "Energy" : "Power Law"
                 )
                 
                 Form {
@@ -88,20 +112,29 @@ struct PowerView: View {
                     }
                     
                     Section("Input Values") {
-                        if formula != .pI2R {
-                            TextField("Voltage (V)", text: $voltage)
+                        if formula == .energy {
+                            TextField("Power (W)", text: $powerInput)
                                 .keyboardType(.decimalPad)
-                                .validatedDecimalInput($voltage)
-                        }
-                        if formula != .pV2R {
-                            TextField("Current (A)", text: $current)
+                                .validatedDecimalInput($powerInput)
+                            TextField("Time (s)", text: $time)
                                 .keyboardType(.decimalPad)
-                                .validatedDecimalInput($current)
-                        }
-                        if formula != .pVI {
-                            TextField("Resistance (Ω)", text: $resistance)
-                                .keyboardType(.decimalPad)
-                                .validatedDecimalInput($resistance)
+                                .validatedDecimalInput($time)
+                        } else {
+                            if formula != .pI2R {
+                                TextField("Voltage (V)", text: $voltage)
+                                    .keyboardType(.decimalPad)
+                                    .validatedDecimalInput($voltage)
+                            }
+                            if formula != .pV2R {
+                                TextField("Current (A)", text: $current)
+                                    .keyboardType(.decimalPad)
+                                    .validatedDecimalInput($current)
+                            }
+                            if formula != .pVI {
+                                TextField("Resistance (Ω)", text: $resistance)
+                                    .keyboardType(.decimalPad)
+                                    .validatedDecimalInput($resistance)
+                            }
                         }
                     }
                     
@@ -109,7 +142,8 @@ struct PowerView: View {
                         Button {
                             hasCalculated = true
                             if let p = power {
-                                historyManager.add(formulaName: "Power", result: String(format: "%.4g W", p))
+                                let (unit, name) = formula == .energy ? ("J", "Energy") : ("W", "Power")
+                                historyManager.add(formulaName: name, result: String(format: "%.4g \(unit)", p))
                             }
                         } label: {
                             Text("Calculate")
@@ -122,14 +156,16 @@ struct PowerView: View {
                     
                     if hasCalculated, let power {
                         Section("Result") {
-                            let resultStr = String(format: "%.4g W", power)
+                            let resultStr = formula == .energy
+                                ? String(format: "%.4g J", power)
+                                : String(format: "%.4g W", power)
                             ResultWithActionsView(result: resultStr, fullText: (steps + [resultStr]).joined(separator: "\n"))
                         }
                         
                         Section {
                             StepByStepView(
                                 steps: steps,
-                                result: String(format: "%.4g W", power)
+                                result: formula == .energy ? String(format: "%.4g J", power) : String(format: "%.4g W", power)
                             )
                         }
                     }

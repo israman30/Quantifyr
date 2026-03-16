@@ -20,11 +20,25 @@ struct FormulaLibraryItem: Identifiable {
 /// Categories drive dynamic UI in ElectricalView, PhysicsView, etc.
 struct FormulaLibrary {
     
+    /// Electrical Engineering formulas — organized for students
     static let electrical: [FormulaLibraryItem] = [
+        // Ohm's Law and variants
         FormulaLibraryItem(id: "ohms_law", name: "Ohm's Law", formula: "V = I × R", icon: "bolt.fill"),
-        FormulaLibraryItem(id: "power", name: "Power Law", formula: "P = V × I", icon: "gauge.with.dots.needle.67percent"),
-        FormulaLibraryItem(id: "resistor", name: "Resistor Series/Parallel", formula: "R_total = R₁+R₂+... or 1/R₁+1/R₂+...", icon: "rectangle.3.group"),
-        FormulaLibraryItem(id: "capacitance", name: "Capacitance", formula: "Q = CV", icon: "selection.pin.in.out")
+        FormulaLibraryItem(id: "ohms_law", name: "Current", formula: "I = V / R", icon: "arrow.right"),
+        FormulaLibraryItem(id: "ohms_law", name: "Resistance", formula: "R = V / I", icon: "rectangle.3.group"),
+        // Power and Energy
+        FormulaLibraryItem(id: "power", name: "Electrical Power", formula: "P = V × I", icon: "gauge.with.dots.needle.67percent"),
+        FormulaLibraryItem(id: "power", name: "Power (Current form)", formula: "P = I²R", icon: "gauge.with.dots.needle.67percent"),
+        FormulaLibraryItem(id: "power", name: "Power (Voltage form)", formula: "P = V² / R", icon: "gauge.with.dots.needle.67percent"),
+        FormulaLibraryItem(id: "power", name: "Energy", formula: "E = P × t", icon: "bolt.circle"),
+        // Resistors
+        FormulaLibraryItem(id: "resistor", name: "Series Resistance", formula: "R_total = R₁ + R₂ + ...", icon: "rectangle.3.group"),
+        FormulaLibraryItem(id: "resistor", name: "Parallel Resistance", formula: "1/R = 1/R₁ + 1/R₂", icon: "rectangle.3.group"),
+        // Capacitors
+        FormulaLibraryItem(id: "capacitance", name: "Capacitor Energy", formula: "E = ½ C V²", icon: "bolt.fill"),
+        FormulaLibraryItem(id: "capacitance", name: "Capacitor Charge", formula: "Q = C × V", icon: "selection.pin.in.out"),
+        // RC circuits
+        FormulaLibraryItem(id: "rc_filter", name: "RC Time Constant", formula: "τ = R × C", icon: "waveform.circle")
     ]
     
     static let physics: [FormulaLibraryItem] = [

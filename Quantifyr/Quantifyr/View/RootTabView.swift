@@ -15,10 +15,12 @@ struct RootTabView: View {
                     Label("Home", systemImage: "house.fill")
                 }
             
-            UnitConverterView()
-                .tabItem {
-                    Label("Units", systemImage: "arrow.left.arrow.right")
-                }
+            NavigationStack {
+                UnitConverterView()
+            }
+            .tabItem {
+                Label("Units", systemImage: "arrow.left.arrow.right")
+            }
         }
     }
 }
