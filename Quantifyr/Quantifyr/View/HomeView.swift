@@ -8,12 +8,18 @@
 import SwiftUI
 
 // MARK: - Home View
+enum CategoryLayout: String, CaseIterable {
+    case grid = "square.grid.2x2"
+    case list = "list.bullet"
+}
+
 struct HomeView: View {
     @Environment(HistoryManager.self) private var historyManager
     @Environment(FavoritesManager.self) private var favoritesManager
     @Environment(SpotlightRouter.self) private var spotlightRouter
     @State private var searchText = ""
     @State private var navigationPath = [String]()
+    @State private var categoryLayout: CategoryLayout = .grid
     
     private var searchResults: [FormulaEntry] {
         FormulaRegistry.search(searchText)
@@ -58,6 +64,23 @@ struct HomeView: View {
             )
             .navigationTitle("Quantifyr")
             .navigationBarTitleDisplayMode(.large)
+            .toolbar {
+                ToolbarItem(placement: .primaryAction) {
+                    Menu {
+                        Picker("Layout", selection: $categoryLayout) {
+                            Label("Grid", systemImage: "square.grid.2x2")
+                                .tag(CategoryLayout.grid)
+                            Label("List", systemImage: "list.bullet")
+                                .tag(CategoryLayout.list)
+                        }
+                        .pickerStyle(.inline)
+                    } label: {
+                        Image(systemName: categoryLayout == .grid ? "square.grid.2x2" : "list.bullet")
+                            .font(.system(size: 16, weight: .medium))
+                    }
+                    .accessibilityLabel("Toggle grid or list layout")
+                }
+            }
             .searchable(text: $searchText, prompt: "Search formulas: voltage, force, frequency...")
             .navigationDestination(for: String.self) { formulaId in
                 FormulaRegistry.destination(for: formulaId)
@@ -188,62 +211,120 @@ struct HomeView: View {
                 .foregroundStyle(AppTheme.sectionSubtitle)
                 .padding(.bottom, 6)
             
-            VStack(spacing: 14) {
-                CategoryCardLink(
-                    title: "Unit Converter",
-                    subtitle: "Length, weight, temperature, speed, energy",
-                    icon: "arrow.left.arrow.right",
-                    accent: AppTheme.Category.unitConverter,
-                    destination: { UnitConverterView() }
-                )
-                
-                CategoryCardLink(
-                    title: "Electrical",
-                    subtitle: "Ohm's Law, Power, Energy, Resistors, Capacitors, RC",
-                    icon: "bolt.fill",
-                    accent: AppTheme.Category.electrical,
-                    destination: { ElectricalView() }
-                )
-                
-                CategoryCardLink(
-                    title: "Physics",
-                    subtitle: "Force, Energy, Velocity, Density, Pressure, Work",
-                    icon: "atom",
-                    accent: AppTheme.Category.physics,
-                    destination: { PhysicsView() }
-                )
-                
-                CategoryCardLink(
-                    title: "Frequency",
-                    subtitle: "Wave speed, Frequency, Period, Reactance",
-                    icon: "waveform",
-                    accent: AppTheme.Category.frequency,
-                    destination: { FrequencyView() }
-                )
-                
-                CategoryCardLink(
-                    title: "Math",
-                    subtitle: "Slope, Quadratic, Area, Volume, Pythagorean",
-                    icon: "number",
-                    accent: AppTheme.Category.math,
-                    destination: { MathView() }
-                )
-                
-                CategoryCardLink(
-                    title: "Graph Equations",
-                    subtitle: "Plot y = f(x): x², sin(x), 2x+1",
-                    icon: "chart.line.uptrend.xyaxis",
-                    accent: AppTheme.Category.math,
-                    destination: { GraphView() }
-                )
-                
-                CategoryCardLink(
-                    title: "Constants",
-                    subtitle: "π, c, G, h, ε₀, Avogadro, and more",
-                    icon: "square.stack.3d.up",
-                    accent: AppTheme.Category.physics,
-                    destination: { ConstantsView() }
-                )
+            if categoryLayout == .grid {
+                LazyVGrid(columns: [
+                    GridItem(.flexible(), spacing: 12),
+                    GridItem(.flexible(), spacing: 12)
+                ], spacing: 12) {
+                    CategoryCardLink(
+                        title: "Unit Converter",
+                        subtitle: "Length, weight, temperature, speed, energy",
+                        icon: "arrow.left.arrow.right",
+                        accent: AppTheme.Category.unitConverter,
+                        compact: true,
+                        destination: { UnitConverterView() }
+                    )
+                    CategoryCardLink(
+                        title: "Electrical",
+                        subtitle: "Ohm's Law, Power, Energy, Resistors, Capacitors, RC",
+                        icon: "bolt.fill",
+                        accent: AppTheme.Category.electrical,
+                        compact: true,
+                        destination: { ElectricalView() }
+                    )
+                    CategoryCardLink(
+                        title: "Physics",
+                        subtitle: "Force, Energy, Velocity, Density, Pressure, Work",
+                        icon: "atom",
+                        accent: AppTheme.Category.physics,
+                        compact: true,
+                        destination: { PhysicsView() }
+                    )
+                    CategoryCardLink(
+                        title: "Frequency",
+                        subtitle: "Wave speed, Frequency, Period, Reactance",
+                        icon: "waveform",
+                        accent: AppTheme.Category.frequency,
+                        compact: true,
+                        destination: { FrequencyView() }
+                    )
+                    CategoryCardLink(
+                        title: "Math",
+                        subtitle: "Slope, Quadratic, Area, Volume, Pythagorean",
+                        icon: "number",
+                        accent: AppTheme.Category.math,
+                        compact: true,
+                        destination: { MathView() }
+                    )
+                    CategoryCardLink(
+                        title: "Graph Equations",
+                        subtitle: "Plot y = f(x): x², sin(x), 2x+1",
+                        icon: "chart.line.uptrend.xyaxis",
+                        accent: AppTheme.Category.math,
+                        compact: true,
+                        destination: { GraphView() }
+                    )
+                    CategoryCardLink(
+                        title: "Constants",
+                        subtitle: "π, c, G, h, ε₀, Avogadro, and more",
+                        icon: "square.stack.3d.up",
+                        accent: AppTheme.Category.physics,
+                        compact: true,
+                        destination: { ConstantsView() }
+                    )
+                }
+            } else {
+                VStack(spacing: 14) {
+                    CategoryCardLink(
+                        title: "Unit Converter",
+                        subtitle: "Length, weight, temperature, speed, energy",
+                        icon: "arrow.left.arrow.right",
+                        accent: AppTheme.Category.unitConverter,
+                        destination: { UnitConverterView() }
+                    )
+                    CategoryCardLink(
+                        title: "Electrical",
+                        subtitle: "Ohm's Law, Power, Energy, Resistors, Capacitors, RC",
+                        icon: "bolt.fill",
+                        accent: AppTheme.Category.electrical,
+                        destination: { ElectricalView() }
+                    )
+                    CategoryCardLink(
+                        title: "Physics",
+                        subtitle: "Force, Energy, Velocity, Density, Pressure, Work",
+                        icon: "atom",
+                        accent: AppTheme.Category.physics,
+                        destination: { PhysicsView() }
+                    )
+                    CategoryCardLink(
+                        title: "Frequency",
+                        subtitle: "Wave speed, Frequency, Period, Reactance",
+                        icon: "waveform",
+                        accent: AppTheme.Category.frequency,
+                        destination: { FrequencyView() }
+                    )
+                    CategoryCardLink(
+                        title: "Math",
+                        subtitle: "Slope, Quadratic, Area, Volume, Pythagorean",
+                        icon: "number",
+                        accent: AppTheme.Category.math,
+                        destination: { MathView() }
+                    )
+                    CategoryCardLink(
+                        title: "Graph Equations",
+                        subtitle: "Plot y = f(x): x², sin(x), 2x+1",
+                        icon: "chart.line.uptrend.xyaxis",
+                        accent: AppTheme.Category.math,
+                        destination: { GraphView() }
+                    )
+                    CategoryCardLink(
+                        title: "Constants",
+                        subtitle: "π, c, G, h, ε₀, Avogadro, and more",
+                        icon: "square.stack.3d.up",
+                        accent: AppTheme.Category.physics,
+                        destination: { ConstantsView() }
+                    )
+                }
             }
             
             // Advanced Features (Future Versions)
@@ -321,13 +402,14 @@ struct CategoryCardLink<Destination: View>: View {
     var subtitle: String? = nil
     let icon: String
     var accent: Color = AppTheme.accent
+    var compact: Bool = false
     @ViewBuilder let destination: () -> Destination
     
     var body: some View {
         NavigationLink {
             destination()
         } label: {
-            FeatureCard(title: title, subtitle: subtitle, icon: icon, accent: accent)
+            FeatureCard(title: title, subtitle: subtitle, icon: icon, accent: accent, compact: compact)
         }
         .buttonStyle(.plain)
     }
@@ -460,8 +542,20 @@ struct FeatureCard: View {
     var subtitle: String? = nil
     let icon: String
     var accent: Color = AppTheme.accent
+    var compact: Bool = false
     
     var body: some View {
+        Group {
+            if compact {
+                compactContent
+            } else {
+                listContent
+            }
+        }
+        .cardStyle(cornerRadius: 16, hasShadow: true)
+    }
+    
+    private var listContent: some View {
         HStack(spacing: 16) {
             Image(systemName: icon)
                 .font(.system(size: 20, weight: .semibold))
@@ -489,7 +583,40 @@ struct FeatureCard: View {
                 .foregroundStyle(accent.opacity(0.8))
         }
         .padding(16)
-        .cardStyle(cornerRadius: 16, hasShadow: true)
+    }
+    
+    private var compactContent: some View {
+        VStack(alignment: .leading, spacing: 10) {
+            Image(systemName: icon)
+                .font(.system(size: 22, weight: .semibold))
+                .foregroundStyle(accent)
+                .frame(width: 44, height: 44)
+                .background(accent.opacity(0.15))
+                .clipShape(RoundedRectangle(cornerRadius: 10, style: .continuous))
+            
+            VStack(alignment: .leading, spacing: 4) {
+                Text(title)
+                    .font(AppTypography.subtitle)
+                    .fontWeight(.semibold)
+                    .foregroundStyle(.primary)
+                    .lineLimit(2)
+                
+                if let subtitle {
+                    Text(subtitle)
+                        .font(AppTypography.caption2)
+                        .foregroundStyle(AppTheme.sectionSubtitle)
+                        .lineLimit(2)
+                }
+            }
+            
+            Spacer(minLength: 0)
+            
+            Image(systemName: "chevron.right")
+                .font(.system(size: 12, weight: .semibold))
+                .foregroundStyle(accent.opacity(0.8))
+        }
+        .padding(14)
+        .frame(maxWidth: .infinity, alignment: .leading)
     }
 }
 
