@@ -55,21 +55,18 @@ struct OhmsLawView: View {
         case .voltage:
             guard let i = Double(current), let res = Double(resistance) else { return [] }
             return [
-                "Given: I = \(i) A, R = \(res) Ω",
                 "V = I × R",
                 "V = \(i) × \(res)"
             ]
         case .current:
             guard let v = Double(voltage), let res = Double(resistance) else { return [] }
             return [
-                "Given: V = \(v) V, R = \(res) Ω",
                 "I = V / R",
                 "I = \(v) / \(res)"
             ]
         case .resistance:
             guard let v = Double(voltage), let i = Double(current) else { return [] }
             return [
-                "Given: V = \(v) V, I = \(i) A",
                 "R = V / I",
                 "R = \(v) / \(i)"
             ]
@@ -84,77 +81,67 @@ struct OhmsLawView: View {
         }
     }
     
+    private var displayedFormula: String {
+        switch solveFor {
+        case .voltage: return "V = I × R"
+        case .current: return "I = V / R"
+        case .resistance: return "R = V / I"
+        }
+    }
+    
+    private var resultDisplay: String? {
+        guard let r = result else { return nil }
+        let unitName = r.unit == "A" ? "Amps" : (r.unit == "V" ? "Volts" : "Ohms")
+        return "\(String(format: "%.4g", r.value)) \(unitName)"
+    }
+    
     var body: some View {
-        ScrollView {
-            VStack(spacing: 24) {
-                // Formula Visualizer - interactive, color-coded
-                FormulaVisualizerView.ohmsLaw()
-                
-                Form {
-                    Section {
-                        Picker("Calculate", selection: $solveFor) {
-                            ForEach(OhmsLawSolveFor.allCases, id: \.self) { opt in
-                                Text(opt.rawValue).tag(opt)
-                            }
-                        }
-                        .pickerStyle(.menu)
-                    } header: {
-                        Text("Calculate")
+        FormulaDetailView(
+            title: "Ohm's Law",
+            formula: displayedFormula,
+            onCalculate: {
+                hasCalculated = true
+                if let str = resultString {
+                    historyManager.add(formulaName: "Ohm's Law", result: str)
+                }
+            },
+            canCalculate: canCalculate,
+            result: hasCalculated ? resultDisplay : nil,
+            steps: hasCalculated ? steps : nil,
+            stepsResult: hasCalculated ? resultString : nil,
+            inputContent: {
+                VStack(spacing: 12) {
+                    if solveFor != .voltage {
+                        TextField("Voltage (V)", text: $voltage)
+                            .keyboardType(.decimalPad)
+                            .foregroundStyle(OhmsLawColor.voltage)
+                            .validatedDecimalInput($voltage)
+                            .textFieldStyle(.roundedBorder)
                     }
-                    
-                    Section("Input Values") {
-                        if solveFor != .voltage {
-                            TextField("Voltage (V)", text: $voltage)
-                                .keyboardType(.decimalPad)
-                                .foregroundStyle(OhmsLawColor.voltage)
-                                .validatedDecimalInput($voltage)
-                        }
-                        if solveFor != .current {
-                            TextField("Current (A)", text: $current)
-                                .keyboardType(.decimalPad)
-                                .foregroundStyle(OhmsLawColor.current)
-                                .validatedDecimalInput($current)
-                        }
-                        if solveFor != .resistance {
-                            TextField("Resistance (Ω)", text: $resistance)
-                                .keyboardType(.decimalPad)
-                                .foregroundStyle(OhmsLawColor.resistance)
-                                .validatedDecimalInput($resistance)
-                        }
+                    if solveFor != .current {
+                        TextField("Current (A)", text: $current)
+                            .keyboardType(.decimalPad)
+                            .foregroundStyle(OhmsLawColor.current)
+                            .validatedDecimalInput($current)
+                            .textFieldStyle(.roundedBorder)
                     }
-                    
-                    Section {
-                        Button {
-                            hasCalculated = true
-                            if let str = resultString {
-                                historyManager.add(formulaName: "Ohm's Law", result: str)
-                            }
-                        } label: {
-                            Text("Calculate")
-                                .frame(maxWidth: .infinity)
-                                .padding(.vertical, 12)
-                        }
-                        .buttonStyle(.borderedProminent)
-                        .disabled(!canCalculate)
-                    }
-                    
-                    if hasCalculated, let resultString {
-                        Section("Result") {
-                            ResultWithActionsView(result: resultString, fullText: ([resultString] + steps).joined(separator: "\n"))
-                        }
-                        
-                        Section {
-                            StepByStepView(
-                                steps: steps,
-                                result: resultString
-                            )
-                        }
+                    if solveFor != .resistance {
+                        TextField("Resistance (Ω)", text: $resistance)
+                            .keyboardType(.decimalPad)
+                            .foregroundStyle(OhmsLawColor.resistance)
+                            .validatedDecimalInput($resistance)
+                            .textFieldStyle(.roundedBorder)
                     }
                 }
-                .scrollContentBackground(.hidden)
+            }, optionalContent: {
+                Picker("Solve for", selection: $solveFor) {
+                    ForEach(OhmsLawSolveFor.allCases, id: \.self) { opt in
+                        Text(opt.rawValue).tag(opt)
+                    }
+                }
+                .pickerStyle(.menu)
             }
-            .padding()
-        }
+        )
         .numericKeyboardToolbar()
         .navigationTitle("Ohm's Law")
         .toolbar {

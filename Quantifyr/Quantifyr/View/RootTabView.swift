@@ -30,4 +30,5 @@ struct RootTabView: View {
         .environment(HistoryManager.shared)
         .environment(FavoritesManager.shared)
         .environment(SpotlightRouter())
+        .environmentObject(Coordinator())
 }

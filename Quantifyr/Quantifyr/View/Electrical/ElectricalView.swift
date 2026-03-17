@@ -8,12 +8,14 @@
 import SwiftUI
 
 struct ElectricalView: View {
+    @EnvironmentObject private var coordinator: Coordinator
+    
     var body: some View {
         List {
-            ForEach(FormulaLibrary.electrical) { item in
-                NavigationLink {
-                    FormulaRegistry.destination(for: item.id)
-                }                 label: {
+            ForEach(FormulaLibrary.electrical, id: \.name) { item in
+                Button {
+                    coordinator.push(.formula(id: item.id))
+                } label: {
                     HStack(spacing: 12) {
                         Image(systemName: item.icon)
                             .font(.title3)
@@ -41,5 +43,6 @@ struct ElectricalView: View {
             .environment(HistoryManager.shared)
             .environment(FavoritesManager.shared)
             .environment(SpotlightRouter())
+            .environmentObject(Coordinator())
     }
 }

@@ -14,7 +14,7 @@ struct QuantifyrApp: App {
     
     var body: some Scene {
         WindowGroup {
-            RootTabView()
+            CoordinatorView()
                 .environment(HistoryManager.shared)
                 .environment(FavoritesManager.shared)
                 .environment(spotlightRouter)
