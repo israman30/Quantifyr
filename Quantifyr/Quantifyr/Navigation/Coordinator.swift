@@ -16,6 +16,7 @@ enum Pages: Hashable, Identifiable {
     case physics
     case frequency
     case math
+    case calculator
     case graph
     case constants
     case formula(id: String)
@@ -67,6 +68,8 @@ final class Coordinator: ObservableObject {
             FrequencyView()
         case .math:
             MathView()
+        case .calculator:
+            CalculatorView()
         case .graph:
             GraphView()
         case .constants:

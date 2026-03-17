@@ -12,6 +12,24 @@ struct MathView: View {
     
     var body: some View {
         List {
+            Button {
+                coordinator.push(.calculator)
+            } label: {
+                HStack(spacing: 12) {
+                    Image(systemName: "function")
+                        .font(.title3)
+                        .foregroundStyle(AppTheme.Category.math)
+                        .frame(width: 32, alignment: .center)
+                    VStack(alignment: .leading, spacing: 2) {
+                        Text("Scientific Calculator")
+                            .font(.headline)
+                        Text("3+4*2, sin(π/2), log(100)")
+                            .font(.caption)
+                            .fontDesign(.monospaced)
+                            .foregroundStyle(.secondary)
+                    }
+                }
+            }
             ForEach(FormulaLibrary.math) { item in
                 Button {
                     coordinator.push(.formula(id: item.id))

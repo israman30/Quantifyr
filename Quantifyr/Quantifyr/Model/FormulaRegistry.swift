@@ -75,6 +75,7 @@ enum FormulaRegistry {
         FormulaEntry(id: "volume_cylinder", name: "Volume Cylinder", formula: "V = πr²h", category: "Math", keywords: ["volume", "cylinder", "radius", "height"]),
         FormulaEntry(id: "average", name: "Average", formula: "mean = Σx / n", category: "Math", keywords: ["average", "mean", "statistics"]),
         FormulaEntry(id: "metric_prefix", name: "Metric Prefix", formula: "kilo, mega, giga, milli, micro", category: "Math", keywords: ["metric", "prefix", "kilo", "mega", "giga", "milli", "micro", "nano"]),
+        FormulaEntry(id: "scientific_calculator", name: "Scientific Calculator", formula: "3+4*2, sin(π/2), log(100)", category: "Math", keywords: ["calculator", "ti-84", "scientific", "sin", "cos", "log", "sqrt", "pemdas"]),
         FormulaEntry(id: "graph_equations", name: "Graph Equations", formula: "y = f(x)", category: "Math", keywords: ["graph", "plot", "equation", "chart", "xy", "sin", "cos"]),
         FormulaEntry(id: "constants", name: "Engineering Constants", formula: "π, c, G, h, ε₀, ...", category: "Reference", keywords: ["constants", "pi", "planck", "speed of light", "gravity", "avogadro"])
     ]
@@ -130,6 +131,7 @@ enum FormulaRegistry {
         case "volume_cylinder": VolumeCylinderView()
         case "average": AverageView()
         case "metric_prefix": MetricPrefixView()
+        case "scientific_calculator": CalculatorView()
         case "graph_equations": GraphView()
         case "constants": ConstantsView()
         default: EmptyView()
