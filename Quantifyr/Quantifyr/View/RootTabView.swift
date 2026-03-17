@@ -10,10 +10,12 @@ import SwiftUI
 struct RootTabView: View {
     var body: some View {
         TabView {
-            HomeView()
-                .tabItem {
-                    Label("Home", systemImage: "house.fill")
-                }
+            NavigationStack {
+                HomeView()
+            }
+            .tabItem {
+                Label("Home", systemImage: "house.fill")
+            }
             
             NavigationStack {
                 UnitConverterView()
