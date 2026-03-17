@@ -83,304 +83,304 @@ struct HomeView: View {
     }
     
     private var searchSection: some View {
-    VStack(alignment: .leading, spacing: 12) {
-        if !searchText.isEmpty {
-            Text("Search results")
-                .font(AppTypography.sectionTitle)
-                .foregroundStyle(AppTheme.sectionTitle)
-            
-            if searchResults.isEmpty {
-                Text("No formulas match \"\(searchText)\"")
-                    .font(AppTypography.subtitle)
-                    .foregroundStyle(AppTheme.sectionSubtitle)
-                    .padding(.vertical, 16)
-                    .frame(maxWidth: .infinity, alignment: .leading)
-            } else {
-                ForEach(searchResults) { entry in
-                    Button {
-                        coordinator.push(.formula(id: entry.id))
-                    } label: {
-                        FormulaSearchRow(entry: entry)
+        VStack(alignment: .leading, spacing: 12) {
+            if !searchText.isEmpty {
+                Text("Search results")
+                    .font(AppTypography.sectionTitle)
+                    .foregroundStyle(AppTheme.sectionTitle)
+                
+                if searchResults.isEmpty {
+                    Text("No formulas match \"\(searchText)\"")
+                        .font(AppTypography.subtitle)
+                        .foregroundStyle(AppTheme.sectionSubtitle)
+                        .padding(.vertical, 16)
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                } else {
+                    ForEach(searchResults) { entry in
+                        Button {
+                            coordinator.push(.formula(id: entry.id))
+                        } label: {
+                            FormulaSearchRow(entry: entry)
+                        }
+                        .buttonStyle(.plain)
                     }
-                    .buttonStyle(.plain)
                 }
             }
         }
-    }
     }
     
     private var recentCalculationsSection: some View {
-    VStack(alignment: .leading, spacing: 14) {
-        HStack {
-            Text("Recent calculations")
-                .font(AppTypography.sectionTitle)
-                .foregroundStyle(AppTheme.sectionTitle)
-            Spacer()
-            Button("Clear") {
-                historyManager.clear()
+        VStack(alignment: .leading, spacing: 14) {
+            HStack {
+                Text("Recent calculations")
+                    .font(AppTypography.sectionTitle)
+                    .foregroundStyle(AppTheme.sectionTitle)
+                Spacer()
+                Button("Clear") {
+                    historyManager.clear()
+                }
+                .font(AppTypography.caption2)
+                .foregroundStyle(AppTheme.accent)
+                .fontWeight(.medium)
             }
-            .font(AppTypography.caption2)
-            .foregroundStyle(AppTheme.accent)
-            .fontWeight(.medium)
-        }
-        
-        VStack(spacing: 0) {
-            ForEach(historyManager.records.prefix(10)) { record in
-                HStack {
-                    VStack(alignment: .leading, spacing: 4) {
-                        Text(record.formulaName)
-                            .font(AppTypography.subtitle)
-                            .fontWeight(.semibold)
-                            .foregroundStyle(.primary)
-                        Text(record.result)
-                            .font(AppTypography.caption)
-                            .foregroundStyle(AppTheme.sectionSubtitle)
-                    }
-                    Spacer()
-                    Menu {
-                        Button {
-                            UIPasteboard.general.string = "\(record.formulaName): \(record.result)"
+            
+            VStack(spacing: 0) {
+                ForEach(historyManager.records.prefix(10)) { record in
+                    HStack {
+                        VStack(alignment: .leading, spacing: 4) {
+                            Text(record.formulaName)
+                                .font(AppTypography.subtitle)
+                                .fontWeight(.semibold)
+                                .foregroundStyle(.primary)
+                            Text(record.result)
+                                .font(AppTypography.caption)
+                                .foregroundStyle(AppTheme.sectionSubtitle)
+                        }
+                        Spacer()
+                        Menu {
+                            Button {
+                                UIPasteboard.general.string = "\(record.formulaName): \(record.result)"
+                            } label: {
+                                Label("Copy", systemImage: "doc.on.doc")
+                            }
+                            ShareLink(item: "\(record.formulaName): \(record.result)", subject: Text("Calculation"), message: Text("\(record.formulaName): \(record.result)")) {
+                                Label("Share", systemImage: "square.and.arrow.up")
+                            }
                         } label: {
-                            Label("Copy", systemImage: "doc.on.doc")
+                            Image(systemName: "ellipsis.circle")
+                                .font(.system(size: 18))
+                                .foregroundStyle(AppTheme.sectionSubtitle)
                         }
-                        ShareLink(item: "\(record.formulaName): \(record.result)", subject: Text("Calculation"), message: Text("\(record.formulaName): \(record.result)")) {
-                            Label("Share", systemImage: "square.and.arrow.up")
-                        }
-                    } label: {
-                        Image(systemName: "ellipsis.circle")
-                            .font(.system(size: 18))
-                            .foregroundStyle(AppTheme.sectionSubtitle)
+                    }
+                    .padding(.vertical, 14)
+                    .padding(.horizontal, 16)
+                    
+                    if record.id != historyManager.records.prefix(10).last?.id {
+                        Divider()
+                            .padding(.leading, 16)
                     }
                 }
-                .padding(.vertical, 14)
-                .padding(.horizontal, 16)
-                
-                if record.id != historyManager.records.prefix(10).last?.id {
-                    Divider()
-                        .padding(.leading, 16)
-                }
             }
+            .cardStyle(cornerRadius: 14, hasShadow: true)
         }
-        .cardStyle(cornerRadius: 14, hasShadow: true)
-    }
     }
     
     private var favoritesSection: some View {
-    VStack(alignment: .leading, spacing: 14) {
-        Text("Favorites")
-            .font(AppTypography.sectionTitle)
-            .foregroundStyle(AppTheme.sectionTitle)
-        
-        ScrollView(.horizontal, showsIndicators: false) {
-            HStack(spacing: 12) {
-                ForEach(favoriteEntries) { entry in
-                    Button {
-                        coordinator.push(.formula(id: entry.id))
-                    } label: {
-                        FavoriteChip(entry: entry)
+        VStack(alignment: .leading, spacing: 14) {
+            Text("Favorites")
+                .font(AppTypography.sectionTitle)
+                .foregroundStyle(AppTheme.sectionTitle)
+            
+            ScrollView(.horizontal, showsIndicators: false) {
+                HStack(spacing: 12) {
+                    ForEach(favoriteEntries) { entry in
+                        Button {
+                            coordinator.push(.formula(id: entry.id))
+                        } label: {
+                            FavoriteChip(entry: entry)
+                        }
+                        .buttonStyle(.plain)
                     }
-                    .buttonStyle(.plain)
                 }
+                .padding(.vertical, 6)
             }
-            .padding(.vertical, 6)
+            .frame(height: 52)
         }
-        .frame(height: 52)
-    }
     }
     
     private var categorySection: some View {
-    VStack(alignment: .leading, spacing: 14) {
-        Text("Scientific Toolkit")
-            .font(AppTypography.sectionTitle)
-            .foregroundStyle(AppTheme.sectionTitle)
-        
-        Text("Enter known values → get results instantly")
-            .font(AppTypography.subtitle)
-            .foregroundStyle(AppTheme.sectionSubtitle)
-            .padding(.bottom, 6)
-        
-        if categoryLayout == .grid {
-            LazyVGrid(columns: [
-                GridItem(.flexible(), spacing: 12),
-                GridItem(.flexible(), spacing: 12)
-            ], spacing: 12) {
-                CategoryCardLink(
-                    title: "Unit Converter",
-                    subtitle: "Length, weight, temperature, speed, energy",
-                    icon: "arrow.left.arrow.right",
-                    accent: AppTheme.Category.unitConverter,
-                    compact: true,
-                    page: .unitConverter
-                )
-                CategoryCardLink(
-                    title: "Electrical",
-                    subtitle: "Ohm's Law, Power, Energy, Resistors, Capacitors, RC",
-                    icon: "bolt.fill",
-                    accent: AppTheme.Category.electrical,
-                    compact: true,
-                    page: .electrical
-                )
-                CategoryCardLink(
-                    title: "Physics",
-                    subtitle: "Force, Energy, Velocity, Density, Pressure, Work",
-                    icon: "atom",
-                    accent: AppTheme.Category.physics,
-                    compact: true,
-                    page: .physics
-                )
-                CategoryCardLink(
-                    title: "Frequency",
-                    subtitle: "Wave speed, Frequency, Period, Reactance",
-                    icon: "waveform",
-                    accent: AppTheme.Category.frequency,
-                    compact: true,
-                    page: .frequency
-                )
-                CategoryCardLink(
-                    title: "Math",
-                    subtitle: "Slope, Quadratic, Area, Volume, Pythagorean",
-                    icon: "number",
-                    accent: AppTheme.Category.math,
-                    compact: true,
-                    page: .math
-                )
-                CategoryCardLink(
-                    title: "Graph Equations",
-                    subtitle: "Plot y = f(x): x², sin(x), 2x+1",
-                    icon: "chart.line.uptrend.xyaxis",
-                    accent: AppTheme.Category.math,
-                    compact: true,
-                    page: .graph
-                )
-                CategoryCardLink(
-                    title: "Constants",
-                    subtitle: "π, c, G, h, ε₀, Avogadro, and more",
-                    icon: "square.stack.3d.up",
-                    accent: AppTheme.Category.physics,
-                    compact: true,
-                    page: .constants
-                )
+        VStack(alignment: .leading, spacing: 14) {
+            Text("Scientific Toolkit")
+                .font(AppTypography.sectionTitle)
+                .foregroundStyle(AppTheme.sectionTitle)
+            
+            Text("Enter known values → get results instantly")
+                .font(AppTypography.subtitle)
+                .foregroundStyle(AppTheme.sectionSubtitle)
+                .padding(.bottom, 6)
+            
+            if categoryLayout == .grid {
+                LazyVGrid(columns: [
+                    GridItem(.flexible(), spacing: 12),
+                    GridItem(.flexible(), spacing: 12)
+                ], spacing: 12) {
+                    CategoryCardLink(
+                        title: "Unit Converter",
+                        subtitle: "Length, weight, temperature, speed, energy",
+                        icon: "arrow.left.arrow.right",
+                        accent: AppTheme.Category.unitConverter,
+                        compact: true,
+                        page: .unitConverter
+                    )
+                    CategoryCardLink(
+                        title: "Electrical",
+                        subtitle: "Ohm's Law, Power, Energy, Resistors, Capacitors, RC",
+                        icon: "bolt.fill",
+                        accent: AppTheme.Category.electrical,
+                        compact: true,
+                        page: .electrical
+                    )
+                    CategoryCardLink(
+                        title: "Physics",
+                        subtitle: "Force, Energy, Velocity, Density, Pressure, Work",
+                        icon: "atom",
+                        accent: AppTheme.Category.physics,
+                        compact: true,
+                        page: .physics
+                    )
+                    CategoryCardLink(
+                        title: "Frequency",
+                        subtitle: "Wave speed, Frequency, Period, Reactance",
+                        icon: "waveform",
+                        accent: AppTheme.Category.frequency,
+                        compact: true,
+                        page: .frequency
+                    )
+                    CategoryCardLink(
+                        title: "Math",
+                        subtitle: "Slope, Quadratic, Area, Volume, Pythagorean",
+                        icon: "number",
+                        accent: AppTheme.Category.math,
+                        compact: true,
+                        page: .math
+                    )
+                    CategoryCardLink(
+                        title: "Graph Equations",
+                        subtitle: "Plot y = f(x): x², sin(x), 2x+1",
+                        icon: "chart.line.uptrend.xyaxis",
+                        accent: AppTheme.Category.math,
+                        compact: true,
+                        page: .graph
+                    )
+                    CategoryCardLink(
+                        title: "Constants",
+                        subtitle: "π, c, G, h, ε₀, Avogadro, and more",
+                        icon: "square.stack.3d.up",
+                        accent: AppTheme.Category.physics,
+                        compact: true,
+                        page: .constants
+                    )
+                }
+            } else {
+                VStack(spacing: 14) {
+                    CategoryCardLink(
+                        title: "Unit Converter",
+                        subtitle: "Length, weight, temperature, speed, energy",
+                        icon: "arrow.left.arrow.right",
+                        accent: AppTheme.Category.unitConverter,
+                        page: .unitConverter
+                    )
+                    CategoryCardLink(
+                        title: "Electrical",
+                        subtitle: "Ohm's Law, Power, Energy, Resistors, Capacitors, RC",
+                        icon: "bolt.fill",
+                        accent: AppTheme.Category.electrical,
+                        page: .electrical
+                    )
+                    CategoryCardLink(
+                        title: "Physics",
+                        subtitle: "Force, Energy, Velocity, Density, Pressure, Work",
+                        icon: "atom",
+                        accent: AppTheme.Category.physics,
+                        page: .physics
+                    )
+                    CategoryCardLink(
+                        title: "Frequency",
+                        subtitle: "Wave speed, Frequency, Period, Reactance",
+                        icon: "waveform",
+                        accent: AppTheme.Category.frequency,
+                        page: .frequency
+                    )
+                    CategoryCardLink(
+                        title: "Math",
+                        subtitle: "Slope, Quadratic, Area, Volume, Pythagorean",
+                        icon: "number",
+                        accent: AppTheme.Category.math,
+                        page: .math
+                    )
+                    CategoryCardLink(
+                        title: "Graph Equations",
+                        subtitle: "Plot y = f(x): x², sin(x), 2x+1",
+                        icon: "chart.line.uptrend.xyaxis",
+                        accent: AppTheme.Category.math,
+                        page: .graph
+                    )
+                    CategoryCardLink(
+                        title: "Constants",
+                        subtitle: "π, c, G, h, ε₀, Avogadro, and more",
+                        icon: "square.stack.3d.up",
+                        accent: AppTheme.Category.physics,
+                        page: .constants
+                    )
+                }
             }
-        } else {
-            VStack(spacing: 14) {
-                CategoryCardLink(
-                    title: "Unit Converter",
-                    subtitle: "Length, weight, temperature, speed, energy",
-                    icon: "arrow.left.arrow.right",
-                    accent: AppTheme.Category.unitConverter,
-                    page: .unitConverter
-                )
-                CategoryCardLink(
-                    title: "Electrical",
-                    subtitle: "Ohm's Law, Power, Energy, Resistors, Capacitors, RC",
-                    icon: "bolt.fill",
-                    accent: AppTheme.Category.electrical,
-                    page: .electrical
-                )
-                CategoryCardLink(
-                    title: "Physics",
-                    subtitle: "Force, Energy, Velocity, Density, Pressure, Work",
-                    icon: "atom",
-                    accent: AppTheme.Category.physics,
-                    page: .physics
-                )
-                CategoryCardLink(
-                    title: "Frequency",
-                    subtitle: "Wave speed, Frequency, Period, Reactance",
-                    icon: "waveform",
-                    accent: AppTheme.Category.frequency,
-                    page: .frequency
-                )
-                CategoryCardLink(
-                    title: "Math",
-                    subtitle: "Slope, Quadratic, Area, Volume, Pythagorean",
-                    icon: "number",
-                    accent: AppTheme.Category.math,
-                    page: .math
-                )
-                CategoryCardLink(
-                    title: "Graph Equations",
-                    subtitle: "Plot y = f(x): x², sin(x), 2x+1",
-                    icon: "chart.line.uptrend.xyaxis",
-                    accent: AppTheme.Category.math,
-                    page: .graph
-                )
-                CategoryCardLink(
-                    title: "Constants",
-                    subtitle: "π, c, G, h, ε₀, Avogadro, and more",
-                    icon: "square.stack.3d.up",
-                    accent: AppTheme.Category.physics,
-                    page: .constants
-                )
-            }
+            
+            // Advanced Features (Future Versions)
+            advancedFeaturesSection
         }
-        
-        // Advanced Features (Future Versions)
-        advancedFeaturesSection
-    }
     }
     
     private var advancedFeaturesSection: some View {
-    VStack(alignment: .leading, spacing: 14) {
-        Text("Advanced Features")
-            .font(AppTypography.sectionTitle)
-            .foregroundStyle(AppTheme.sectionTitle)
-        
-        Text("Professional tools for students")
-            .font(AppTypography.subtitle)
-            .foregroundStyle(AppTheme.sectionSubtitle)
-            .padding(.bottom, 6)
-        
-        VStack(spacing: 12) {
-            FeatureBadge(
-                title: "Formula Visualizer",
-                subtitle: "Color-coded variables, tap to learn",
-                icon: "function"
-            )
+        VStack(alignment: .leading, spacing: 14) {
+            Text("Advanced Features")
+                .font(AppTypography.sectionTitle)
+                .foregroundStyle(AppTheme.sectionTitle)
             
-            FeatureBadge(
-                title: "Unit Intelligence",
-                subtitle: "1000 m → suggests 1 km",
-                icon: "lightbulb.fill"
-            )
+            Text("Professional tools for students")
+                .font(AppTypography.subtitle)
+                .foregroundStyle(AppTheme.sectionSubtitle)
+                .padding(.bottom, 6)
             
-            FeatureBadge(
-                title: "Calculation Steps",
-                subtitle: "Step-by-step solutions",
-                icon: "list.number"
-            )
-            
-            FeatureBadge(
-                title: "Smart Keyboard",
-                subtitle: "Numeric pad + Done button",
-                icon: "keyboard"
-            )
-            
-            FeatureBadge(
-                title: "Tap to Copy",
-                subtitle: "Tap result → copy to clipboard",
-                icon: "doc.on.doc"
-            )
-            
-            FeatureBadge(
-                title: "Calculation History",
-                subtitle: "Recent calculations above",
-                icon: "clock.arrow.circlepath"
-            )
-            
-            FeatureBadge(
-                title: "Graph Equations",
-                subtitle: "Plot y = f(x) with Swift Charts",
-                icon: "chart.line.uptrend.xyaxis"
-            )
-            
-            FeatureBadge(
-                title: "Spotlight Search",
-                subtitle: "Search formulas from Home screen",
-                icon: "magnifyingglass"
-            )
+            VStack(spacing: 12) {
+                FeatureBadge(
+                    title: "Formula Visualizer",
+                    subtitle: "Color-coded variables, tap to learn",
+                    icon: "function"
+                )
+                
+                FeatureBadge(
+                    title: "Unit Intelligence",
+                    subtitle: "1000 m → suggests 1 km",
+                    icon: "lightbulb.fill"
+                )
+                
+                FeatureBadge(
+                    title: "Calculation Steps",
+                    subtitle: "Step-by-step solutions",
+                    icon: "list.number"
+                )
+                
+                FeatureBadge(
+                    title: "Smart Keyboard",
+                    subtitle: "Numeric pad + Done button",
+                    icon: "keyboard"
+                )
+                
+                FeatureBadge(
+                    title: "Tap to Copy",
+                    subtitle: "Tap result → copy to clipboard",
+                    icon: "doc.on.doc"
+                )
+                
+                FeatureBadge(
+                    title: "Calculation History",
+                    subtitle: "Recent calculations above",
+                    icon: "clock.arrow.circlepath"
+                )
+                
+                FeatureBadge(
+                    title: "Graph Equations",
+                    subtitle: "Plot y = f(x) with Swift Charts",
+                    icon: "chart.line.uptrend.xyaxis"
+                )
+                
+                FeatureBadge(
+                    title: "Spotlight Search",
+                    subtitle: "Search formulas from Home screen",
+                    icon: "magnifyingglass"
+                )
+            }
         }
-    }
     }
 }
 
