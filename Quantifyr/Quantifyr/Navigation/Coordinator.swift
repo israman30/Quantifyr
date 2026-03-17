@@ -83,27 +83,39 @@ struct CoordinatorView: View {
     @Environment(SpotlightRouter.self) private var spotlightRouter
     
     var body: some View {
-        NavigationStack(path: $coordinator.path) {
-            coordinator.build(.main)
-                .navigationDestination(for: Pages.self) { page in
-                    coordinator.build(page)
-                }
-                .sheet(item: $coordinator.sheet) { sheet in
-                    coordinator.build(sheet)
-                }
-                .fullScreenCover(item: $coordinator.fullScreenSheet) { fullScreenSheet in
-                    coordinator.build(fullScreenSheet)
-                }
-                .onAppear {
-                    if let id = spotlightRouter.consumePendingNavigation() {
-                        coordinator.push(.formula(id: id))
+        TabView {
+            NavigationStack(path: $coordinator.path) {
+                HomeView()
+                    .navigationDestination(for: Pages.self) { page in
+                        coordinator.build(page)
                     }
-                }
-                .onChange(of: spotlightRouter.formulaIdToOpen) { _, _ in
-                    if let id = spotlightRouter.consumePendingNavigation() {
-                        coordinator.push(.formula(id: id))
-                    }
-                }
+            }
+            .tabItem {
+                Label("Home", systemImage: "house.fill")
+            }
+            
+            NavigationStack {
+                UnitConverterView()
+            }
+            .tabItem {
+                Label("Units", systemImage: "arrow.left.arrow.right")
+            }
+        }
+        .sheet(item: $coordinator.sheet) { sheet in
+            coordinator.build(sheet)
+        }
+        .fullScreenCover(item: $coordinator.fullScreenSheet) { fullScreenSheet in
+            coordinator.build(fullScreenSheet)
+        }
+        .onAppear {
+            if let id = spotlightRouter.consumePendingNavigation() {
+                coordinator.push(.formula(id: id))
+            }
+        }
+        .onChange(of: spotlightRouter.formulaIdToOpen) { _, _ in
+            if let id = spotlightRouter.consumePendingNavigation() {
+                coordinator.push(.formula(id: id))
+            }
         }
         .environmentObject(coordinator)
     }
