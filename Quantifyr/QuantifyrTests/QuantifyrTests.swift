@@ -18,12 +18,22 @@ final class QuantifyrTests: XCTestCase {
         // Put teardown code here. This method is called after the invocation of each test method in the class.
     }
 
-    func testExample() throws {
-        // This is an example of a functional test case.
-        // Use XCTAssert and related functions to verify your tests produce the correct results.
-        // Any test you write for XCTest can be annotated as throws and async.
-        // Mark your test throws to produce an unexpected failure when your test encounters an uncaught error.
-        // Mark your test async to allow awaiting for asynchronous code to complete. Check the results with assertions afterwards.
+    func testScientificCalculatorBasic() throws {
+        XCTAssertEqual(ScientificCalculator.evaluate(expression: "3 + 4 * 2"), 11)
+        XCTAssertEqual(ScientificCalculator.evaluate(expression: "(5 + 3)^2"), 64)
+        XCTAssertEqual(ScientificCalculator.evaluate(expression: "10 / 2"), 5)
+    }
+    
+    func testScientificCalculatorFunctions() throws {
+        XCTAssertEqual(ScientificCalculator.evaluate(expression: "sin(0)"), 0, accuracy: 1e-10)
+        XCTAssertEqual(ScientificCalculator.evaluate(expression: "sin(pi/2)"), 1, accuracy: 1e-10)
+        XCTAssertEqual(ScientificCalculator.evaluate(expression: "log(100)"), 2, accuracy: 1e-10)
+        XCTAssertEqual(ScientificCalculator.evaluate(expression: "sqrt(16)"), 4, accuracy: 1e-10)
+    }
+    
+    func testScientificCalculatorWithVariable() throws {
+        XCTAssertEqual(ScientificCalculator.evaluate(expression: "x^2", x: 3), 9, accuracy: 1e-10)
+        XCTAssertEqual(ScientificCalculator.evaluate(expression: "2*x+1", x: 5), 11, accuracy: 1e-10)
     }
 
     func testPerformanceExample() throws {

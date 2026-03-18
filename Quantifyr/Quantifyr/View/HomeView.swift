@@ -245,6 +245,14 @@ struct HomeView: View {
                         page: .math
                     )
                     CategoryCardLink(
+                        title: "Calculator",
+                        subtitle: "TI-84 style: sin, cos, log, π, PEMDAS",
+                        icon: "function",
+                        accent: AppTheme.Category.math,
+                        compact: true,
+                        page: .calculator
+                    )
+                    CategoryCardLink(
                         title: "Graph Equations",
                         subtitle: "Plot y = f(x): x², sin(x), 2x+1",
                         icon: "chart.line.uptrend.xyaxis",
@@ -297,6 +305,13 @@ struct HomeView: View {
                         icon: "number",
                         accent: AppTheme.Category.math,
                         page: .math
+                    )
+                    CategoryCardLink(
+                        title: "Calculator",
+                        subtitle: "TI-84 style: sin, cos, log, π, PEMDAS",
+                        icon: "function",
+                        accent: AppTheme.Category.math,
+                        page: .calculator
                     )
                     CategoryCardLink(
                         title: "Graph Equations",
