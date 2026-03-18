@@ -63,6 +63,12 @@ struct HomeView: View {
                             .tag(CategoryLayout.list)
                     }
                     .pickerStyle(.inline)
+                    Divider()
+                    Button {
+                        coordinator.sheet = .onboarding
+                    } label: {
+                        Label("How it works", systemImage: "questionmark.circle")
+                    }
                 } label: {
                     Image(systemName: categoryLayout == .grid ? "square.grid.2x2" : "list.bullet")
                         .font(.system(size: 16, weight: .medium))

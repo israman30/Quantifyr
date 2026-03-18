@@ -28,9 +28,14 @@ enum Pages: Hashable, Identifiable {
 
 // MARK: - Sheet Pages (for modal presentation)
 enum SheetPage: Identifiable {
-    // Add sheet cases as needed, e.g. case settings
     case placeholder
-    var id: String { "placeholder" }
+    case onboarding
+    var id: String {
+        switch self {
+        case .placeholder: return "placeholder"
+        case .onboarding: return "onboarding"
+        }
+    }
 }
 
 // MARK: - Coordinator
@@ -131,6 +136,8 @@ extension Coordinator {
         switch sheet {
         case .placeholder:
             EmptyView()
+        case .onboarding:
+            OnboardingTutorialView()
         }
     }
 }
