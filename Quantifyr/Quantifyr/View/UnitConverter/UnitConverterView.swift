@@ -93,21 +93,20 @@ struct UnitConverterView: View {
                             resultUnit: toUnits[toUnitIndex],
                             category: selectedCategory
                         ) {
-                            HStack(spacing: 12) {
+                            HStack(spacing: Spacing.m) {
                                 Image(systemName: "lightbulb.fill")
-                                    .foregroundStyle(AppTheme.Category.electrical)
-                                VStack(alignment: .leading, spacing: 4) {
+                                    .foregroundStyle(AppColors.electrical)
+                                VStack(alignment: .leading, spacing: Spacing.s) {
                                     Text("Smart suggestion")
-                                        .font(.caption)
+                                        .font(AppTypography.caption)
                                         .foregroundStyle(.secondary)
                                     Text("\(formatSuggestion(suggestion.value)) \(suggestion.unit)")
-                                        .font(.headline)
-                                        .fontDesign(.monospaced)
+                                        .font(AppTypography.number)
                                 }
                                 Spacer()
                             }
-                            .padding(12)
-                            .background(AppTheme.Category.electrical.opacity(0.12))
+                            .padding(Spacing.m)
+                            .background(AppColors.electrical.opacity(0.12))
                             .clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous))
                         }
                     }

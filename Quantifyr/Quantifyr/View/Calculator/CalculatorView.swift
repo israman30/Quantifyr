@@ -22,16 +22,16 @@ struct CalculatorView: View {
         ScrollView {
             VStack(spacing: 20) {
                 // Display
-                VStack(alignment: .trailing, spacing: 8) {
+                VStack(alignment: .trailing, spacing: Spacing.s) {
                     Text(displayExpression)
-                        .font(.system(size: 28, weight: .medium, design: .monospaced))
+                        .font(AppTypography.number)
                         .foregroundStyle(.primary)
                         .lineLimit(2)
                         .minimumScaleFactor(0.6)
                         .frame(maxWidth: .infinity, alignment: .trailing)
                     
                     Text(result)
-                        .font(.system(size: 36, weight: .semibold, design: .rounded))
+                        .font(AppTypography.displayNumber)
                         .foregroundStyle(result.isEmpty ? .secondary : AppTheme.accent)
                         .lineLimit(1)
                         .minimumScaleFactor(0.5)
@@ -44,9 +44,9 @@ struct CalculatorView: View {
                             .frame(maxWidth: .infinity, alignment: .trailing)
                     }
                 }
-                .padding()
+                .padding(Spacing.m)
                 .frame(maxWidth: .infinity)
-                .background(AppTheme.cardBackground)
+                .background(.ultraThinMaterial)
                 .clipShape(RoundedRectangle(cornerRadius: 14, style: .continuous))
                 
                 // Button grid
@@ -54,9 +54,9 @@ struct CalculatorView: View {
                     handleInput(value)
                 }
             }
-            .padding()
+            .padding(Spacing.m)
         }
-        .background(Color(.systemGroupedBackground))
+        .background(AppColors.background)
         .navigationTitle("Calculator")
         .toolbar {
             ToolbarItem(placement: .topBarTrailing) {

@@ -43,19 +43,17 @@ struct FormulaDetailView<InputContent: View, OptionalContent: View>: View {
     
     var body: some View {
         ScrollView {
-            VStack(alignment: .leading, spacing: 24) {
+            VStack(alignment: .leading, spacing: Spacing.l) {
                 // Formula
-                VStack(alignment: .leading, spacing: 8) {
+                VStack(alignment: .leading, spacing: Spacing.s) {
                     Text("Formula")
-                        .font(.subheadline)
+                        .font(AppTypography.body)
                         .fontWeight(.medium)
                         .foregroundStyle(.secondary)
                     Text(formula)
-                        .font(.title)
-                        .fontWeight(.bold)
-                        .fontDesign(.monospaced)
+                        .font(AppTypography.number)
                         .frame(maxWidth: .infinity, alignment: .leading)
-                        .padding()
+                        .padding(Spacing.m)
                         .background(.ultraThinMaterial)
                         .clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous))
                 }
@@ -64,9 +62,9 @@ struct FormulaDetailView<InputContent: View, OptionalContent: View>: View {
                 optionalContent()
                 
                 // Input
-                VStack(alignment: .leading, spacing: 8) {
+                VStack(alignment: .leading, spacing: Spacing.s) {
                     Text("Input")
-                        .font(.subheadline)
+                        .font(AppTypography.body)
                         .fontWeight(.medium)
                         .foregroundStyle(.secondary)
                     inputContent()
@@ -75,17 +73,19 @@ struct FormulaDetailView<InputContent: View, OptionalContent: View>: View {
                 // Calculate
                 Button(action: onCalculate) {
                     Text("Calculate")
+                        .font(AppTypography.body)
+                        .fontWeight(.semibold)
                         .frame(maxWidth: .infinity)
-                        .padding(.vertical, 14)
+                        .padding(.vertical, Spacing.m)
                 }
                 .buttonStyle(.borderedProminent)
                 .disabled(!canCalculate)
                 
                 // Result
                 if let result {
-                    VStack(alignment: .leading, spacing: 8) {
+                    VStack(alignment: .leading, spacing: Spacing.s) {
                         Text("Result")
-                            .font(.subheadline)
+                            .font(AppTypography.body)
                             .fontWeight(.medium)
                             .foregroundStyle(.secondary)
                         ResultWithActionsView(result: result, fullText: fullResultText)
@@ -93,9 +93,9 @@ struct FormulaDetailView<InputContent: View, OptionalContent: View>: View {
                     
                     // Steps (optional)
                     if let steps, !steps.isEmpty {
-                        VStack(alignment: .leading, spacing: 8) {
+                        VStack(alignment: .leading, spacing: Spacing.s) {
                             Text("Steps")
-                                .font(.subheadline)
+                                .font(AppTypography.body)
                                 .fontWeight(.medium)
                                 .foregroundStyle(.secondary)
                             StepByStepView(steps: steps, result: stepsResult ?? result)
@@ -103,7 +103,7 @@ struct FormulaDetailView<InputContent: View, OptionalContent: View>: View {
                     }
                 }
             }
-            .padding()
+            .padding(Spacing.m)
         }
     }
     

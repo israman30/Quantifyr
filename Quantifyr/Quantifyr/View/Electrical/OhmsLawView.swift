@@ -13,11 +13,11 @@ enum OhmsLawSolveFor: String, CaseIterable {
     case resistance = "Resistance (R)"
 }
 
-// Color coding for students: Voltage → Blue, Current → Green, Resistance → Orange
+// Color coding for students: Voltage → Blue, Current → Green, Resistance → Orange (semantic)
 private enum OhmsLawColor {
-    static let voltage = Color.blue
-    static let current = Color.green
-    static let resistance = Color.orange
+    static let voltage = AppColors.physics
+    static let current = AppColors.math
+    static let resistance = AppColors.electrical
 }
 
 struct OhmsLawView: View {
@@ -110,7 +110,7 @@ struct OhmsLawView: View {
             steps: hasCalculated ? steps : nil,
             stepsResult: hasCalculated ? resultString : nil,
             inputContent: {
-                VStack(spacing: 12) {
+                VStack(spacing: Spacing.m) {
                     if solveFor != .voltage {
                         TextField("Voltage (V)", text: $voltage)
                             .keyboardType(.decimalPad)

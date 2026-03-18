@@ -19,13 +19,13 @@ struct StepByStepView: View {
     }
     
     var body: some View {
-        VStack(alignment: .leading, spacing: 12) {
+        VStack(alignment: .leading, spacing: Spacing.m) {
             HStack {
                 Text("Step-by-Step Solution")
-                    .font(.headline)
+                    .font(AppTypography.section)
                 Spacer()
                 if !fullSolutionText.isEmpty {
-                    HStack(spacing: 8) {
+                    HStack(spacing: Spacing.s) {
                         Button {
                             UIPasteboard.general.string = fullSolutionText
                         } label: {
@@ -40,17 +40,17 @@ struct StepByStepView: View {
                 }
             }
             
-            VStack(alignment: .leading, spacing: 8) {
+            VStack(alignment: .leading, spacing: Spacing.s) {
                 ForEach(Array(steps.enumerated()), id: \.offset) { index, step in
-                    HStack(alignment: .top, spacing: 8) {
+                    HStack(alignment: .top, spacing: Spacing.s) {
                         Text("\(index + 1).")
-                            .font(.caption)
+                            .font(AppTypography.caption)
                             .fontWeight(.semibold)
                             .foregroundStyle(.secondary)
                             .frame(width: 20, alignment: .leading)
                         
                         Text(step)
-                            .font(.subheadline)
+                            .font(AppTypography.body)
                             .fontDesign(.monospaced)
                     }
                 }
@@ -58,11 +58,10 @@ struct StepByStepView: View {
                 if let result {
                     Divider()
                     Text(result)
-                        .font(.headline)
-                        .fontDesign(.monospaced)
+                        .font(AppTypography.number)
                 }
             }
-            .padding()
+            .padding(Spacing.m)
             .frame(maxWidth: .infinity, alignment: .leading)
             .background(.ultraThinMaterial)
             .cornerRadius(12)
