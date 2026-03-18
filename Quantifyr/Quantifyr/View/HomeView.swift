@@ -46,6 +46,9 @@ struct HomeView: View {
                 
                 // Category cards
                 categorySection
+                
+                // App version & copyright
+                appFooter
             }
             .padding(.vertical, Spacing.l)
             .padding(.horizontal, Spacing.m)
@@ -393,6 +396,26 @@ struct HomeView: View {
                 )
             }
         }
+    }
+    
+    private var appFooter: some View {
+        HStack(spacing: 4) {
+            Text("Version \(Bundle.main.appVersion)")
+                .font(AppTypography.caption2)
+                .foregroundStyle(AppTheme.sectionSubtitle)
+            Text("2026©")
+                .font(AppTypography.caption2)
+                .foregroundStyle(AppTheme.sectionSubtitle)
+        }
+        .frame(maxWidth: .infinity)
+        .padding(.top, Spacing.l)
+    }
+}
+
+// MARK: - Bundle Extension
+private extension Bundle {
+    var appVersion: String {
+        (infoDictionary?["CFBundleShortVersionString"] as? String) ?? "1.0"
     }
 }
 
