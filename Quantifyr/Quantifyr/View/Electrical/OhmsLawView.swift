@@ -117,6 +117,7 @@ struct OhmsLawView: View {
                             .foregroundStyle(OhmsLawColor.voltage)
                             .validatedDecimalInput($voltage)
                             .textFieldStyle(.roundedBorder)
+                            .activeInputHighlight(!voltage.isEmpty)
                     }
                     if solveFor != .current {
                         TextField("Current (A)", text: $current)
@@ -124,6 +125,7 @@ struct OhmsLawView: View {
                             .foregroundStyle(OhmsLawColor.current)
                             .validatedDecimalInput($current)
                             .textFieldStyle(.roundedBorder)
+                            .activeInputHighlight(!current.isEmpty)
                     }
                     if solveFor != .resistance {
                         TextField("Resistance (Ω)", text: $resistance)
@@ -131,6 +133,7 @@ struct OhmsLawView: View {
                             .foregroundStyle(OhmsLawColor.resistance)
                             .validatedDecimalInput($resistance)
                             .textFieldStyle(.roundedBorder)
+                            .activeInputHighlight(!resistance.isEmpty)
                     }
                 }
             }, optionalContent: {

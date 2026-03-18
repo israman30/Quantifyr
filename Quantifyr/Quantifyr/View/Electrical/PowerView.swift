@@ -28,16 +28,20 @@ struct PowerView: View {
     private var power: Double? {
         switch formula {
         case .pVI:
-            guard let v = Double(voltage), let i = Double(current) else { return nil }
+            guard let v = Double(voltage),
+                  let i = Double(current) else { return nil }
             return v * i
         case .pI2R:
-            guard let i = Double(current), let r = Double(resistance) else { return nil }
+            guard let i = Double(current),
+                  let r = Double(resistance) else { return nil }
             return i * i * r
         case .pV2R:
-            guard let v = Double(voltage), let r = Double(resistance), r != 0 else { return nil }
+            guard let v = Double(voltage),
+                  let r = Double(resistance), r != 0 else { return nil }
             return (v * v) / r
         case .energy:
-            guard let p = Double(powerInput), let t = Double(time), p >= 0, t >= 0 else { return nil }
+            guard let p = Double(powerInput),
+                  let t = Double(time), p >= 0, t >= 0 else { return nil }
             return p * t
         }
     }
@@ -46,28 +50,32 @@ struct PowerView: View {
         guard power != nil else { return [] }
         switch formula {
         case .pVI:
-            guard let v = Double(voltage), let i = Double(current) else { return [] }
+            guard let v = Double(voltage),
+                  let i = Double(current) else { return [] }
             return [
                 "Given: V = \(v) V, I = \(i) A",
                 "P = V × I",
                 "P = \(v) × \(i)"
             ]
         case .pI2R:
-            guard let i = Double(current), let r = Double(resistance) else { return [] }
+            guard let i = Double(current),
+                  let r = Double(resistance) else { return [] }
             return [
                 "Given: I = \(i) A, R = \(r) Ω",
                 "P = I² × R",
                 "P = \(i)² × \(r)"
             ]
         case .pV2R:
-            guard let v = Double(voltage), let r = Double(resistance) else { return [] }
+            guard let v = Double(voltage),
+                  let r = Double(resistance) else { return [] }
             return [
                 "Given: V = \(v) V, R = \(r) Ω",
                 "P = V² / R",
                 "P = \(v)² / \(r)"
             ]
         case .energy:
-            guard let p = Double(powerInput), let t = Double(time) else { return [] }
+            guard let p = Double(powerInput),
+                  let t = Double(time) else { return [] }
             return [
                 "Given: P = \(p) W, t = \(t) s",
                 "E = P × t",

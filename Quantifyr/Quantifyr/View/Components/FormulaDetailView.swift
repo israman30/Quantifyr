@@ -71,14 +71,19 @@ struct FormulaDetailView<InputContent: View, OptionalContent: View>: View {
                 }
                 
                 // Calculate
-                Button(action: onCalculate) {
+                Button(action: {
+                    if canCalculate {
+                        HapticFeedback.success()
+                    }
+                    onCalculate()
+                }) {
                     Text("Calculate")
                         .font(AppTypography.body)
                         .fontWeight(.semibold)
                         .frame(maxWidth: .infinity)
                         .padding(.vertical, Spacing.m)
                 }
-                .buttonStyle(.borderedProminent)
+                .buttonStyle(CalculateButtonStyle(isEnabled: canCalculate))
                 .disabled(!canCalculate)
                 
                 // Result
@@ -90,6 +95,10 @@ struct FormulaDetailView<InputContent: View, OptionalContent: View>: View {
                             .foregroundStyle(.secondary)
                         ResultWithActionsView(result: result, fullText: fullResultText)
                     }
+                    .transition(.asymmetric(
+                        insertion: .opacity.combined(with: .move(edge: .bottom)).combined(with: .scale(scale: 0.95)),
+                        removal: .opacity
+                    ))
                     
                     // Steps (optional)
                     if let steps, !steps.isEmpty {
@@ -105,6 +114,7 @@ struct FormulaDetailView<InputContent: View, OptionalContent: View>: View {
             }
             .padding(Spacing.m)
         }
+        .animation(.easeInOut(duration: 0.3), value: result != nil)
     }
     
     private var fullResultText: String {

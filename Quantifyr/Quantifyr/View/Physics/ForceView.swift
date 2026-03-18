@@ -45,13 +45,16 @@ struct ForceView: View {
                         TextField("Mass (kg)", text: $mass)
                             .keyboardType(.decimalPad)
                             .validatedDecimalInput($mass)
+                            .activeInputHighlight(!mass.isEmpty)
                         TextField("Acceleration (m/s²)", text: $acceleration)
                             .keyboardType(.decimalPad)
                             .validatedDecimalInput($acceleration)
+                            .activeInputHighlight(!acceleration.isEmpty)
                     }
                     
                     Section {
                         Button {
+                            if canCalculate { HapticFeedback.success() }
                             hasCalculated = true
                             if let str = resultString {
                                 historyManager.add(formulaName: "Force", result: str)
@@ -61,7 +64,7 @@ struct ForceView: View {
                                 .frame(maxWidth: .infinity)
                                 .padding(.vertical, 12)
                         }
-                        .buttonStyle(.borderedProminent)
+                        .buttonStyle(CalculateButtonStyle(isEnabled: canCalculate))
                         .disabled(!canCalculate)
                     }
                     
