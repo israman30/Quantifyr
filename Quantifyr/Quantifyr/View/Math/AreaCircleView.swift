@@ -49,10 +49,12 @@ struct AreaCircleView: View {
                         TextField("Radius (r)", text: $radius)
                             .keyboardType(.decimalPad)
                             .validatedDecimalInput($radius)
+                            .activeInputHighlight(!radius.isEmpty)
                     }
                     
                     Section {
                         Button {
+                            if canCalculate { HapticFeedback.success() }
                             hasCalculated = true
                             if let str = resultString {
                                 historyManager.add(formulaName: "Area Circle", result: str)
@@ -62,7 +64,7 @@ struct AreaCircleView: View {
                                 .frame(maxWidth: .infinity)
                                 .padding(.vertical, 12)
                         }
-                        .buttonStyle(.borderedProminent)
+                        .buttonStyle(CalculateButtonStyle(isEnabled: canCalculate))
                         .disabled(!canCalculate)
                     }
                     

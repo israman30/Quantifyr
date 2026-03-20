@@ -46,9 +46,9 @@ struct GraphView: View {
     
     var body: some View {
         ScrollView {
-            VStack(spacing: 20) {
+            VStack(spacing: Spacing.l) {
                 // Equation input
-                VStack(alignment: .leading, spacing: 8) {
+                VStack(alignment: .leading, spacing: Spacing.s) {
                     Text("y =")
                         .font(AppTypography.caption)
                         .foregroundStyle(AppTheme.sectionSubtitle)
@@ -73,17 +73,17 @@ struct GraphView: View {
                             .foregroundStyle(.red)
                     }
                 }
-                .padding()
+                .padding(Spacing.m)
                 .cardStyle(cornerRadius: 14, hasShadow: true)
                 
                 // Presets
-                VStack(alignment: .leading, spacing: 8) {
+                VStack(alignment: .leading, spacing: Spacing.s) {
                     Text("Quick equations")
                         .font(AppTypography.sectionTitle)
                         .foregroundStyle(AppTheme.sectionTitle)
                     
                     ScrollView(.horizontal, showsIndicators: false) {
-                        HStack(spacing: 8) {
+                        HStack(spacing: Spacing.s) {
                             ForEach(presetEquations, id: \.self) { eq in
                                 Button {
                                     equationText = eq
@@ -104,12 +104,12 @@ struct GraphView: View {
                 }
                 
                 // Range
-                VStack(alignment: .leading, spacing: 12) {
+                VStack(alignment: .leading, spacing: Spacing.m) {
                     Text("X range")
                         .font(AppTypography.sectionTitle)
                         .foregroundStyle(AppTheme.sectionTitle)
                     
-                    HStack(spacing: 12) {
+                    HStack(spacing: Spacing.m) {
                         TextField("Min", text: $xMin)
                             .keyboardType(.numbersAndPunctuation)
                             .textFieldStyle(.roundedBorder)
@@ -123,12 +123,12 @@ struct GraphView: View {
                             .frame(maxWidth: .infinity)
                     }
                 }
-                .padding()
+                .padding(Spacing.m)
                 .cardStyle(cornerRadius: 14, hasShadow: true)
                 
                 // Chart
                 if !dataPoints.isEmpty {
-                    VStack(alignment: .leading, spacing: 8) {
+                    VStack(alignment: .leading, spacing: Spacing.s) {
                         Text("Graph")
                             .font(AppTypography.sectionTitle)
                             .foregroundStyle(AppTheme.sectionTitle)
@@ -148,12 +148,12 @@ struct GraphView: View {
                             AxisMarks(values: .automatic(desiredCount: 6))
                         }
                         .frame(height: 280)
-                        .padding()
-                        .background(AppTheme.cardBackground)
+                        .padding(Spacing.m)
+                        .background(.ultraThinMaterial)
                         .clipShape(RoundedRectangle(cornerRadius: 14, style: .continuous))
                     }
                 } else {
-                    VStack(spacing: 12) {
+                    VStack(spacing: Spacing.m) {
                         Image(systemName: "chart.line.uptrend.xyaxis")
                             .font(.system(size: 48))
                             .foregroundStyle(AppTheme.sectionSubtitle)

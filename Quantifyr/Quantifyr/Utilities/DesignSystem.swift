@@ -2,84 +2,108 @@
 //  DesignSystem.swift
 //  Quantifyr
 //
-//  Design system for accessible, attractive UI with high contrast.
+//  Apple-level design system: clarity, depth & layering, typography hierarchy.
 //
 
 import SwiftUI
 
-// MARK: - App Theme
+// MARK: - Spacing System
+enum Spacing {
+    static let s: CGFloat = 8
+    static let m: CGFloat = 16
+    static let l: CGFloat = 24
+}
+
+// MARK: - Color System (Semantic)
+enum AppColors {
+    static let background = Color(.systemGroupedBackground)
+    static let card = Color(.secondarySystemGroupedBackground)
+    
+    static let electrical = Color.orange
+    static let physics = Color.blue
+    static let math = Color.green
+    static let frequency = Color.purple
+}
+
+// MARK: - Typography Hierarchy
+enum AppTypography {
+    /// Large titles for context (34pt)
+    static let title = Font.system(size: 34, weight: .bold)
+    
+    /// Section headers (20pt)
+    static let section = Font.system(size: 20, weight: .semibold)
+    
+    /// Body text (16pt)
+    static let body = Font.system(size: 16)
+    
+    /// Monospaced for calculations (28pt)
+    static let number = Font.system(size: 28, weight: .medium, design: .monospaced)
+    
+    /// Large display for calculator results (36pt)
+    static let displayNumber = Font.system(size: 36, weight: .semibold, design: .monospaced)
+    
+    // MARK: - Legacy (backward compatibility)
+    static let largeTitle = Font.system(size: 28, weight: .bold, design: .rounded)
+    static let sectionTitle = Font.system(size: 20, weight: .semibold)
+    static let cardTitle = Font.system(size: 17, weight: .semibold)
+    static let subtitle = Font.system(size: 15, weight: .regular)
+    static let caption = Font.system(size: 13, weight: .regular)
+    static let caption2 = Font.system(size: 12, weight: .medium)
+}
+
+// MARK: - App Theme (extends AppColors, backward compatible)
 enum AppTheme {
-    /// Primary accent - teal, scientific feel, WCAG AA compliant
     static let accent = Color(red: 0.05, green: 0.58, blue: 0.53)
     static let accentLight = Color(red: 0.05, green: 0.58, blue: 0.53).opacity(0.15)
     
-    /// Category-specific accents for visual hierarchy (all WCAG compliant)
     enum Category {
-        static let unitConverter = Color(red: 0.20, green: 0.47, blue: 0.86)      // Blue
-        static let electrical = Color(red: 0.95, green: 0.55, blue: 0.14)         // Amber
-        static let physics = Color(red: 0.91, green: 0.30, blue: 0.24)            // Coral
-        static let frequency = Color(red: 0.56, green: 0.27, blue: 0.68)          // Purple
-        static let math = Color(red: 0.13, green: 0.59, blue: 0.55)              // Teal
-        static let success = Color(red: 0.18, green: 0.64, blue: 0.38)           // Green
-        static let comingSoon = Color(red: 0.45, green: 0.45, blue: 0.48)        // Gray
+        static let unitConverter = Color(red: 0.20, green: 0.47, blue: 0.86)
+        static let electrical = AppColors.electrical
+        static let physics = AppColors.physics
+        static let frequency = AppColors.frequency
+        static let math = AppColors.math
+        static let success = Color(red: 0.18, green: 0.64, blue: 0.38)
+        static let comingSoon = Color(red: 0.45, green: 0.45, blue: 0.48)
     }
     
-    /// Card styling
-    static let cardBackground = Color(.secondarySystemGroupedBackground)
+    static let cardBackground = AppColors.card
     static let cardShadow = Color.black.opacity(0.06)
-    
-    /// Section header - high contrast
     static let sectionTitle = Color.primary
     static let sectionSubtitle = Color.secondary
 }
 
-// MARK: - Typography (Accessible font sizes)
-enum AppTypography {
-    /// Large title - 28pt for main headings
-    static let largeTitle = Font.system(size: 28, weight: .bold, design: .rounded)
-    
-    /// Section headers - 17pt semibold for clear hierarchy
-    static let sectionTitle = Font.system(size: 17, weight: .semibold)
-    
-    /// Card title - 17pt for readability
-    static let cardTitle = Font.system(size: 17, weight: .semibold)
-    
-    /// Body - 16pt minimum for accessibility
-    static let body = Font.system(size: 16, weight: .regular)
-    
-    /// Subtitle - 15pt
-    static let subtitle = Font.system(size: 15, weight: .regular)
-    
-    /// Caption - 13pt (above 12pt minimum for legibility)
-    static let caption = Font.system(size: 13, weight: .regular)
-    
-    /// Small caption
-    static let caption2 = Font.system(size: 12, weight: .medium)
-}
-
-// MARK: - View Modifiers
+// MARK: - View Modifiers (Depth & layering: materials, soft shadows)
 struct CardStyle: ViewModifier {
     var cornerRadius: CGFloat = 16
     var hasShadow: Bool = true
+    var useMaterial: Bool = true
     
     func body(content: Content) -> some View {
         content
-            .background(AppTheme.cardBackground)
+            .background {
+                if useMaterial {
+                    RoundedRectangle(cornerRadius: cornerRadius, style: .continuous)
+                        .fill(.ultraThinMaterial)
+                } else {
+                    RoundedRectangle(cornerRadius: cornerRadius, style: .continuous)
+                        .fill(AppTheme.cardBackground)
+                }
+            }
             .clipShape(RoundedRectangle(cornerRadius: cornerRadius, style: .continuous))
-            .shadow(color: AppTheme.cardShadow, radius: hasShadow ? 8 : 0, x: 0, y: 2)
+            .shadow(color: AppTheme.cardShadow, radius: hasShadow ? 6 : 0, x: 0, y: 2)
     }
 }
 
 struct SectionHeaderStyle: ViewModifier {
     func body(content: Content) -> some View {
         content
-            .font(AppTypography.sectionTitle)
+            .font(AppTypography.section)
             .foregroundStyle(AppTheme.sectionTitle)
     }
 }
 
 extension View {
-    func cardStyle(cornerRadius: CGFloat = 16, hasShadow: Bool = true) -> some View {
-        modifier(CardStyle(cornerRadius: cornerRadius, hasShadow: hasShadow))
+    func cardStyle(cornerRadius: CGFloat = 16, hasShadow: Bool = true, useMaterial: Bool = true) -> some View {
+        modifier(CardStyle(cornerRadius: cornerRadius, hasShadow: hasShadow, useMaterial: useMaterial))
     }
 }

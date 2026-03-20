@@ -30,7 +30,7 @@ struct HomeView: View {
     
     var body: some View {
         ScrollView {
-            VStack(spacing: 24) {
+            VStack(spacing: Spacing.l) {
                 // Search
                 searchSection
                 
@@ -46,20 +46,14 @@ struct HomeView: View {
                 
                 // Category cards
                 categorySection
+                
+                // App version & copyright
+                appFooter
             }
-            .padding(.vertical, 20)
-            .padding(.horizontal, 16)
+            .padding(.vertical, Spacing.l)
+            .padding(.horizontal, Spacing.m)
         }
-        .background(
-            LinearGradient(
-                colors: [
-                    Color(.systemGroupedBackground),
-                    Color(.systemGroupedBackground).opacity(0.95)
-                ],
-                startPoint: .top,
-                endPoint: .bottom
-            )
-        )
+        .background(AppColors.background)
         .navigationTitle("Quantifyr")
         .navigationBarTitleDisplayMode(.large)
         .toolbar {
@@ -72,6 +66,12 @@ struct HomeView: View {
                             .tag(CategoryLayout.list)
                     }
                     .pickerStyle(.inline)
+                    Divider()
+                    Button {
+                        coordinator.sheet = .onboarding
+                    } label: {
+                        Label("How it works", systemImage: "questionmark.circle")
+                    }
                 } label: {
                     Image(systemName: categoryLayout == .grid ? "square.grid.2x2" : "list.bullet")
                         .font(.system(size: 16, weight: .medium))
@@ -83,7 +83,7 @@ struct HomeView: View {
     }
     
     private var searchSection: some View {
-        VStack(alignment: .leading, spacing: 12) {
+        VStack(alignment: .leading, spacing: Spacing.m) {
             if !searchText.isEmpty {
                 Text("Search results")
                     .font(AppTypography.sectionTitle)
@@ -110,7 +110,7 @@ struct HomeView: View {
     }
     
     private var recentCalculationsSection: some View {
-        VStack(alignment: .leading, spacing: 14) {
+        VStack(alignment: .leading, spacing: Spacing.m) {
             HStack {
                 Text("Recent calculations")
                     .font(AppTypography.sectionTitle)
@@ -152,12 +152,12 @@ struct HomeView: View {
                                 .foregroundStyle(AppTheme.sectionSubtitle)
                         }
                     }
-                    .padding(.vertical, 14)
-                    .padding(.horizontal, 16)
+                    .padding(.vertical, Spacing.m)
+                    .padding(.horizontal, Spacing.m)
                     
                     if record.id != historyManager.records.prefix(10).last?.id {
                         Divider()
-                            .padding(.leading, 16)
+                            .padding(.leading, Spacing.m)
                     }
                 }
             }
@@ -166,7 +166,7 @@ struct HomeView: View {
     }
     
     private var favoritesSection: some View {
-        VStack(alignment: .leading, spacing: 14) {
+        VStack(alignment: .leading, spacing: Spacing.m) {
             Text("Favorites")
                 .font(AppTypography.sectionTitle)
                 .foregroundStyle(AppTheme.sectionTitle)
@@ -189,7 +189,7 @@ struct HomeView: View {
     }
     
     private var categorySection: some View {
-        VStack(alignment: .leading, spacing: 14) {
+        VStack(alignment: .leading, spacing: Spacing.m) {
             Text("Scientific Toolkit")
                 .font(AppTypography.sectionTitle)
                 .foregroundStyle(AppTheme.sectionTitle)
@@ -199,11 +199,11 @@ struct HomeView: View {
                 .foregroundStyle(AppTheme.sectionSubtitle)
                 .padding(.bottom, 6)
             
-            if categoryLayout == .grid {
+                if categoryLayout == .grid {
                 LazyVGrid(columns: [
-                    GridItem(.flexible(), spacing: 12),
-                    GridItem(.flexible(), spacing: 12)
-                ], spacing: 12) {
+                    GridItem(.flexible(), spacing: Spacing.m),
+                    GridItem(.flexible(), spacing: Spacing.m)
+                ], spacing: Spacing.m) {
                     CategoryCardLink(
                         title: "Unit Converter",
                         subtitle: "Length, weight, temperature, speed, energy",
@@ -270,7 +270,7 @@ struct HomeView: View {
                     )
                 }
             } else {
-                VStack(spacing: 14) {
+                VStack(spacing: Spacing.m) {
                     CategoryCardLink(
                         title: "Unit Converter",
                         subtitle: "Length, weight, temperature, speed, energy",
@@ -336,7 +336,7 @@ struct HomeView: View {
     }
     
     private var advancedFeaturesSection: some View {
-        VStack(alignment: .leading, spacing: 14) {
+        VStack(alignment: .leading, spacing: Spacing.m) {
             Text("Advanced Features")
                 .font(AppTypography.sectionTitle)
                 .foregroundStyle(AppTheme.sectionTitle)
@@ -346,7 +346,7 @@ struct HomeView: View {
                 .foregroundStyle(AppTheme.sectionSubtitle)
                 .padding(.bottom, 6)
             
-            VStack(spacing: 12) {
+            VStack(spacing: Spacing.m) {
                 FeatureBadge(
                     title: "Formula Visualizer",
                     subtitle: "Color-coded variables, tap to learn",
@@ -397,6 +397,26 @@ struct HomeView: View {
             }
         }
     }
+    
+    private var appFooter: some View {
+        HStack(spacing: 4) {
+            Text("Version \(Bundle.main.appVersion)")
+                .font(AppTypography.caption2)
+                .foregroundStyle(AppTheme.sectionSubtitle)
+            Text("2026©")
+                .font(AppTypography.caption2)
+                .foregroundStyle(AppTheme.sectionSubtitle)
+        }
+        .frame(maxWidth: .infinity)
+        .padding(.top, Spacing.l)
+    }
+}
+
+// MARK: - Bundle Extension
+private extension Bundle {
+    var appVersion: String {
+        (infoDictionary?["CFBundleShortVersionString"] as? String) ?? "1.0"
+    }
 }
 
 // MARK: - Category Card Link
@@ -425,7 +445,7 @@ struct FormulaSearchRow: View {
     @Environment(FavoritesManager.self) private var favoritesManager
     
     var body: some View {
-        HStack(spacing: 16) {
+        HStack(spacing: Spacing.m) {
             VStack(alignment: .leading, spacing: 6) {
                 Text(entry.name)
                     .font(AppTypography.cardTitle)
@@ -446,7 +466,7 @@ struct FormulaSearchRow: View {
             .buttonStyle(.plain)
             .accessibilityLabel(favoritesManager.isFavorite(entry.id) ? "Remove from favorites" : "Add to favorites")
         }
-        .padding(16)
+        .padding(Spacing.m)
         .cardStyle(cornerRadius: 14, hasShadow: true)
     }
 }
@@ -462,8 +482,8 @@ struct FavoriteChip: View {
                 .fontWeight(.semibold)
                 .foregroundStyle(AppTheme.accent)
         }
-        .padding(.horizontal, 18)
-        .padding(.vertical, 12)
+        .padding(.horizontal, Spacing.l)
+        .padding(.vertical, Spacing.m)
         .background(AppTheme.accentLight)
         .overlay(
             RoundedRectangle(cornerRadius: 24, style: .continuous)
@@ -480,7 +500,7 @@ struct FeatureBadge: View {
     let icon: String
     
     var body: some View {
-        HStack(spacing: 16) {
+        HStack(spacing: Spacing.m) {
             Image(systemName: icon)
                 .font(.system(size: 20, weight: .semibold))
                 .foregroundStyle(AppTheme.Category.success)
@@ -503,7 +523,7 @@ struct FeatureBadge: View {
                 .font(.system(size: 22))
                 .foregroundStyle(AppTheme.Category.success)
         }
-        .padding(16)
+        .padding(Spacing.m)
         .cardStyle(cornerRadius: 16, hasShadow: true)
     }
 }
@@ -515,7 +535,7 @@ struct FutureFeatureCard: View {
     let icon: String
     
     var body: some View {
-        HStack(spacing: 16) {
+        HStack(spacing: Spacing.m) {
             Image(systemName: icon)
                 .font(.system(size: 20, weight: .medium))
                 .foregroundStyle(AppTheme.Category.comingSoon)
@@ -534,7 +554,7 @@ struct FutureFeatureCard: View {
             
             Spacer()
         }
-        .padding(16)
+        .padding(Spacing.m)
         .background(AppTheme.cardBackground.opacity(0.8))
         .clipShape(RoundedRectangle(cornerRadius: 16, style: .continuous))
     }
@@ -560,7 +580,7 @@ struct FeatureCard: View {
     }
     
     private var listContent: some View {
-        HStack(spacing: 16) {
+        HStack(spacing: Spacing.m) {
             Image(systemName: icon)
                 .font(.system(size: 20, weight: .semibold))
                 .foregroundStyle(accent)
@@ -586,7 +606,7 @@ struct FeatureCard: View {
                 .font(.system(size: 14, weight: .semibold))
                 .foregroundStyle(accent.opacity(0.8))
         }
-        .padding(16)
+        .padding(Spacing.m)
     }
     
     private var compactContent: some View {
@@ -619,7 +639,7 @@ struct FeatureCard: View {
                 .font(.system(size: 12, weight: .semibold))
                 .foregroundStyle(accent.opacity(0.8))
         }
-        .padding(14)
+        .padding(Spacing.m)
         .frame(maxWidth: .infinity, alignment: .leading)
     }
 }

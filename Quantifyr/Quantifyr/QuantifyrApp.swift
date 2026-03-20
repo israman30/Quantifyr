@@ -11,6 +11,7 @@ import CoreSpotlight
 @main
 struct QuantifyrApp: App {
     @State private var spotlightRouter = SpotlightRouter()
+    @State private var showFirstLaunchOnboarding = OnboardingManager.shared.isFirstLaunch
     
     var body: some Scene {
         WindowGroup {
@@ -21,6 +22,11 @@ struct QuantifyrApp: App {
                 .onContinueUserActivity(CSSearchableItemActionType, perform: handleSpotlightActivity)
                 .onAppear {
                     SpotlightIndexer.indexAll()
+                }
+                .fullScreenCover(isPresented: $showFirstLaunchOnboarding) {
+                    OnboardingCarouselView(isFirstLaunch: true) {
+                        showFirstLaunchOnboarding = false
+                    }
                 }
         }
     }

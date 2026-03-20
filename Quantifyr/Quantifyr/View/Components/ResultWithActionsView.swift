@@ -28,15 +28,14 @@ struct ResultWithActionsView: View {
     }
     
     var body: some View {
-        VStack(alignment: .leading, spacing: 12) {
+        VStack(alignment: .leading, spacing: Spacing.m) {
             // Tap result → copy
             Button {
                 copyToClipboard()
             } label: {
                 HStack {
                     Text(result)
-                        .font(.title2)
-                        .fontWeight(.semibold)
+                        .font(AppTypography.number)
                         .foregroundStyle(.primary)
                         .multilineTextAlignment(.leading)
                     Spacer()
@@ -49,12 +48,12 @@ struct ResultWithActionsView: View {
                             .foregroundStyle(.secondary)
                     }
                 }
-                .padding(.vertical, 4)
+                .padding(.vertical, Spacing.s)
             }
             .buttonStyle(.plain)
             .disabled(result.isEmpty)
             
-            HStack(spacing: 12) {
+            HStack(spacing: Spacing.m) {
                 Button {
                     copyToClipboard()
                 } label: {

@@ -25,14 +25,14 @@ struct ConstantsView: View {
     
     var body: some View {
         ScrollView {
-            VStack(alignment: .leading, spacing: 20) {
+            VStack(alignment: .leading, spacing: Spacing.l) {
                 Text("Common engineering and scientific constants. Tap to copy.")
                     .font(AppTypography.subtitle)
                     .foregroundStyle(AppTheme.sectionSubtitle)
                     .padding(.bottom, 4)
                 
                 ForEach(groupedByCategory, id: \.0) { category, constants in
-                    VStack(alignment: .leading, spacing: 12) {
+                    VStack(alignment: .leading, spacing: Spacing.m) {
                         Text(category.rawValue)
                             .font(AppTypography.sectionTitle)
                             .foregroundStyle(AppTheme.sectionTitle)
@@ -42,7 +42,7 @@ struct ConstantsView: View {
                                 ConstantRow(constant: constant)
                                 if constant.id != constants.last?.id {
                                     Divider()
-                                        .padding(.leading, 16)
+                                        .padding(.leading, Spacing.m)
                                 }
                             }
                         }
@@ -74,13 +74,13 @@ struct ConstantRow: View {
         Button {
             UIPasteboard.general.string = "\(constant.symbol) = \(constant.value) \(constant.unit)"
         } label: {
-            HStack(alignment: .top, spacing: 16) {
+            HStack(alignment: .top, spacing: Spacing.m) {
                 Text(constant.symbol)
                     .font(.system(size: 24, weight: .semibold))
                     .foregroundStyle(AppTheme.accent)
                     .frame(width: 44, alignment: .center)
                 
-                VStack(alignment: .leading, spacing: 4) {
+                VStack(alignment: .leading, spacing: Spacing.s) {
                     Text(constant.name)
                         .font(AppTypography.cardTitle)
                         .foregroundStyle(.primary)
@@ -88,7 +88,8 @@ struct ConstantRow: View {
                         .font(AppTypography.caption)
                         .foregroundStyle(AppTheme.sectionSubtitle)
                     Text("\(constant.value) \(constant.unit)")
-                        .font(.system(.caption, design: .monospaced))
+                        .font(AppTypography.body)
+                        .fontDesign(.monospaced)
                         .foregroundStyle(AppTheme.accent)
                 }
                 
@@ -98,7 +99,7 @@ struct ConstantRow: View {
                     .font(.system(size: 16))
                     .foregroundStyle(AppTheme.sectionSubtitle)
             }
-            .padding(16)
+            .padding(Spacing.m)
         }
         .buttonStyle(.plain)
     }
